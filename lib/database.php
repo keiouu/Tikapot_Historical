@@ -8,15 +8,13 @@
  * http://www.gnu.org/licenses/gpl-3.0.txt
  */
 
-class Database
+abstract class Database
 {
 	protected $_link;
 	
-	public function connect() {
-	}
-	
-	public function disconnect() {
-	}
+	public abstract function connect();
+	public abstract function query();
+	public abstract function disconnect();
 	
 	function __destruct() {
 		$this->disconnect();

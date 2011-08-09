@@ -6,8 +6,13 @@
  * Licensed under the GPL Version 3 license.
  * http://www.gnu.org/licenses/gpl-3.0.txt
  */
- 
-require("config.php");
-
 ?>
 
+<html>
+	<head>
+		<title>Welcome to Tikapot!</title>
+	</head>
+	<body>
+		<h1>Welcome to Tikapot!</h1>
+	</body>
+</html>
