@@ -1,7 +1,7 @@
 <?php
 /*
  * Tikapot Session Class
- * v0
+ * v1.0
  *
  * Copyright 2011, AUTHORS.txt
  * Licensed under the GPL Version 3 license.
@@ -10,6 +10,12 @@
 
 class Session
 {
+	public $id;
+
+	function __construct() {
+		session_start();
+		$this->id = session_id();
+	}
 }
 
 ?>
