@@ -7,7 +7,7 @@
  * http://www.gnu.org/licenses/gpl-3.0.txt
  */
 
-$database_type = "mysql";
+$database_type = "mysql";      // mysql or psql
 $database_host = "localhost";
 $database_name = "";
 $database_username = "";
