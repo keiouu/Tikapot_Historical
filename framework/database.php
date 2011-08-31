@@ -8,8 +8,8 @@
  * http://www.gnu.org/licenses/gpl-3.0.txt
  */
 
-require_once("databases/mysql.php");
-require_once("databases/postgres.php");
+include_once("databases/mysql.php");
+include_once("databases/postgres.php");
 
 class NotConnectedException extends Exception { }
 
