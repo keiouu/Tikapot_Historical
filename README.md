@@ -1,9 +1,10 @@
 Tikapot is a pot of simple, easy-to-understand PHP libraries to reduce development time.
 
 Current Library List:
-*Timer Class
-*Database Layer
-*Session Layer
+1. Timer Class
+2. Database Layer
+3. Session Layer
+4. Model Architecture
 
 
 #Examples
@@ -42,3 +43,17 @@ $query = $db->query("SELECT * FROM example;");
 $results = $db->fetch($query);
 print_r($results);
 ```
+
+##Model
+```php
+require("framework/model.php");
+require("framework/modelfields.php");
+
+class ExampleModel extends Model
+{
+	private $_first_name = new CharField();
+	private $_last_name = new CharField();
+	private $_age = new NumericField();
+}
+```
+
