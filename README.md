@@ -10,23 +10,33 @@ Current Library List:
 
 ##Timer
 ```php
-require("lib/timer.php");
-$uid = Timer::start();
+require("framework/timer.php");
+$timer = Timer::start();
 for ($i=0; $i<=100000; $i++){}
-$time = Timer::end($uid);
+$time = $timer->ping();
 print("Time for 100,000 iterations: $time seconds");
+for ($i=0; $i<=1000000; $i++){}
+$time = $timer->end();
+print("Time for 1,000,000 iterations: $time seconds");
 ```
 
 ##Session
 ```php
-require("lib/session.php");
-$session = new Session();
-print("Your ID: " . $session->id);
+require("framework/session.php");
+Session::store("Test", 2);
+Session::get("Test"); // Returns 2
+Session::remove("Test");
+Session::put("Test", 4);
+Session::get("Test"); // Returns 4
+Session::store("Test", 5); // Returns 4
+Session::get("Test"); // Returns 5
+Session::put("Test", 2); // Returns False
+Session::get("Test"); // Returns 5
 ```
 
 ##Database
 ```php
-require("lib/database.php");
+require("framework/database.php");
 $db = Database::create();
 $query = $db->query("SELECT * FROM example;");
 $results = $db->fetch($query);
