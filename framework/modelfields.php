@@ -9,19 +9,24 @@
 
 abstract class ModelField
 {
-	public __construct() {
-		$variables = get_class_vars(get_class($this));
+	private static $db_type = "unknown";
+	public $value, $default_value;
+	
+	public function reset() {
+		$this->value = $this->default_value;
 	}
 }
 
 class CharField extends ModelField
 {
-	
+	private static $db_type = "varchar";
+	public $value = "", $default_value = "";
 }
 
 class NumericField extends ModelField
 {
-	
+	private static $db_type = "numeric";
+	public $value = 0.0, $default_value = 0.0; // __construct could take default
 }
 
 ?>

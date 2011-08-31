@@ -12,10 +12,12 @@ require($home_dir . "framework/model.php");
 require($home_dir . "framework/modelfields.php");
 
 class ExampleModel extends Model
-{
-	private $_first_name = new CharField();
-	private $_last_name = new CharField();
-	private $_age = new NumericField();
+{	
+	public function __construct() {
+		$this->add_field("first_name", new CharField());
+		$this->add_field("last_name", new CharField());
+		$this->add_field("age", new NumericField());
+	}
 }
 
 ?>

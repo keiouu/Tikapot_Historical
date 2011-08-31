@@ -11,6 +11,9 @@ ini_set('display_errors', '1');
 
 $home_dir = dirname(__FILE__) . '/';
 include("tests/init.php");
+
+include("apps/example/models.php");
+$example = new ExampleModel();
 ?>
 
 <html>
