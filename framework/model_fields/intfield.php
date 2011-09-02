@@ -45,17 +45,18 @@ class IntField extends ModelField
 			$extra .= " (" . $this->max_length . ")";
 		if (!$this->auto_increment && strlen($this->default_value) > 0)
 			$extra .= " DEFAULT '" . $this->default_value . "'";
-		if ($this->auto_increment)
+		if ($this->auto_increment) {
 			if ($db->get_type() == "mysql")
 				$extra .= " AUTO_INCREMENT";
 			if ($db->get_type() == "psql")
 				$extra .= " DEFAULT nextval('".$this->sequence_name($db, $name, $table_name)."')";
+		}
 		if (strlen($this->_extra) > 0)
 			$extra .= ' ' . $this->_extra;
 		return $name . " " . $this::$db_type . $extra;
 	}
 	
-	public function db_extra_create_query($db, $name, $table_name) {
+	public function db_extra_create_query_pre($db, $name, $table_name) {
 		if ($db->get_type() == "psql" && $this->auto_increment)
 			return "CREATE SEQUENCE ".$this->sequence_name($db, $name, $table_name).";";
 		return "";

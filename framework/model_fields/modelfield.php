@@ -35,8 +35,13 @@ abstract class ModelField
 		return "";
 	}
 	
-	/* This allows subclasses to provide extra, separate queries on createdb such as sequences */
-	public function db_extra_create_query($db, $name, $table_name) {
+	/* This allows subclasses to provide extra, separate queries on createdb such as sequences. These are put before the create table query. */
+	public function db_extra_create_query_pre($db, $name, $table_name) {
+		return "";
+	}
+	
+	/* This allows subclasses to provide extra, separate queries on createdb such as sequences. These are put after the create table query. */
+	public function db_extra_create_query_post($db, $name, $table_name) {
 		return "";
 	}
 	
