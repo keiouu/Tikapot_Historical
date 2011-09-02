@@ -13,7 +13,7 @@ class NumericField extends ModelField
 {
 	private static $db_type = "numeric";
 	private $default_value = 0.0;
-	public $value = 0.0; // __construct could take default
+	public $value = 0.0;
 
 	public function validate() {
 		if (!is_numeric($this->value)) {

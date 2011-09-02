@@ -15,7 +15,7 @@ class TestModel extends Model
 {
 	public function __construct() {
 		$this->add_field("test_prop", new CharField("", $max_length=7));
-		$this->add_field("other_prop", new NumericField());
+		$this->add_field("other_prop", new NumericField(4.5));
 	}
 }
 
@@ -27,15 +27,22 @@ class ModelTest extends UnitTestCase {
 	
 	function testModels() {
 		$obj = new TestModel();
+
+		// Test Defaults
+		$this->assertEqual($obj->other_prop, 4.5);
+
+		// Test setting (and getting)
 		$obj->test_prop = '5';
 		$this->assertEqual($obj->test_prop, '5');
 		$obj->test_prop = '3';
 		$this->assertEqual($obj->test_prop, '3');
 		
+		// Test setting an invalid field name
 		$failed = False;
 		try { $obj->not_a_valid_field = 100; } catch(Exception $e) { $failed = True; }
 		$this->assertTrue($failed);
 		
+		// Test unsetting
 		unset($obj->test_prop);
 		$fields = $obj->get_fields();
 		$this->assertEqual($obj->test_prop, $fields['test_prop']->get_default());
@@ -43,6 +50,8 @@ class ModelTest extends UnitTestCase {
 	
 	function testModelFields() {
 		$obj = new TestModel();
+
+		// Test validation
 		$obj->test_prop = '123456789';
 		$this->assertFalse($obj->validate());
 		$this->assertTrue(count($obj->get_errors()) > 0);

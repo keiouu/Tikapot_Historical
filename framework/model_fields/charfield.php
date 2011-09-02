@@ -16,7 +16,7 @@ class CharField extends ModelField
 	public $value = "";
 
 	public function __construct($default = "", $max_length = 0) {
-			$this->default_value = $default;
+			parent::__construct($default);
 			$this->max_length = $max_length;
 	}
 

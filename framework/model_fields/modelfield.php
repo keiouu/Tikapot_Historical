@@ -15,6 +15,7 @@ abstract class ModelField
 
 	public function __construct($default = "") {
 			$this->default_value = $default;
+			$this->value = $this->default_value;
 	}
 
 	public function get_default() {
