@@ -11,11 +11,11 @@ require_once("modelfield.php");
 
 class NumericField extends ModelField
 {
-	protected static $db_type = "numeric";
+	protected static $db_type = "NUMERIC";
 	private $precision = 0;
 	
-	public function __construct($default = "", $precision = "") {
-			parent::__construct($default);
+	public function __construct($default = "", $precision = "", $_extra = "") {
+			parent::__construct($default, $_extra);
 			$this->precision = $precision;
 	}
 
@@ -27,7 +27,7 @@ class NumericField extends ModelField
 				return False;
 			}
 		}
-		if (!is_numeric($this->value)) {
+		if (strlen($this->value) > 0 && !is_numeric($this->value)) {
 			array_push($this->errors, "Value is not numeric!");
 			return False;
 		}
@@ -36,11 +36,15 @@ class NumericField extends ModelField
 	
 	public function db_create_query($db, $name) {
 		$extra = "";
+		if (strlen($extra) > 0)
+			$extra = ' ' . $extra;
 		if ($this->precision !== "")
 			$extra .= " (" . $this->precision . ")";
-		if ($this->default_value !== "")
+		if (strlen($this->default_value) > 0)
 			$extra .= " DEFAULT '" . $this->default_value . "'";
-		return $name . " NUMERIC" . $extra;
+		if (strlen($this->_extra) > 0)
+			$extra .= ' ' . $this->_extra;
+		return $name . " " . $this::$db_type . $extra;
 	}
 }
 

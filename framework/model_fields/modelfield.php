@@ -11,11 +11,12 @@ abstract class ModelField
 {
 	protected static $db_type = "unknown";
 	protected $default_value = "";
-	public $value = "", $errors = array();
+	public $value = "", $errors = array(), $_extra = "";
 
-	public function __construct($default = "") {
+	public function __construct($default = "", $_extra = "") {
 			$this->default_value = $default;
 			$this->value = $this->default_value;
+			$this->_extra = $_extra;
 	}
 
 	public function get_default() {

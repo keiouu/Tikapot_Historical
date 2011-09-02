@@ -10,6 +10,7 @@
 global $home_dir;
 require_once($home_dir . "lib/simpletest/autorun.php");
 require_once($home_dir . "framework/model.php");
+require_once($home_dir . "framework/database.php");
 
 class TestModel extends Model
 {
@@ -22,24 +23,32 @@ class TestModel extends Model
 
 class ModelTest extends UnitTestCase {
 	function testModelDB() {
+		$db = Database::create();
 		$obj = new TestModel();
-		$this->assertEqual($obj->db_create_query(NULL), "CREATE TABLE testmodel (test_prop VARCHAR (7), other_prop NUMERIC DEFAULT '4.5');");
-		$this->assertEqual($obj->insert_query(NULL), "INSERT INTO testmodel (test_prop, other_prop) VALUES ('', 4.5);");
+		if ($db->get_type() == "mysql")
+			$this->assertEqual($obj->db_create_query($db), "CREATE TABLE testmodel (id BIGINT (22) DEFAULT '0' PRIMARY KEY, test_prop VARCHAR (7), other_prop NUMERIC DEFAULT '4.5');");
+		else
+			$this->assertEqual($obj->db_create_query($db), "CREATE TABLE testmodel (id BIGINT DEFAULT '0', test_prop VARCHAR (7), other_prop NUMERIC DEFAULT '4.5');");
+		$this->assertEqual($obj->insert_query($db), "INSERT INTO testmodel (id, test_prop, other_prop) VALUES (0, '', 4.5);");
 		$this->assertTrue($obj->create_table());
 		$this->assertTrue($obj->save());
 		
 		$test_field = new CharField("test", $max_length=7);
-		$this->assertEqual($test_field->db_create_query(NULL, "test_field"), "test_field VARCHAR (7) DEFAULT 'test'");
+		$this->assertEqual($test_field->db_create_query($db, "test_field"), "test_field VARCHAR (7) DEFAULT 'test'");
 		$test_field = new CharField("test");
-		$this->assertEqual($test_field->db_create_query(NULL, "test_field"), "test_field VARCHAR DEFAULT 'test'");
+		$this->assertEqual($test_field->db_create_query($db, "test_field"), "test_field VARCHAR DEFAULT 'test'");
 		$test_field = new CharField();
-		$this->assertEqual($test_field->db_create_query(NULL, "test_field"), "test_field VARCHAR");
+		$this->assertEqual($test_field->db_create_query($db, "test_field"), "test_field VARCHAR");
 		$test_field = new NumericField(1.0, "4,2");
-		$this->assertEqual($test_field->db_create_query(NULL, "test_field"), "test_field NUMERIC (4,2) DEFAULT '1'");
+		$this->assertEqual($test_field->db_create_query($db, "test_field"), "test_field NUMERIC (4,2) DEFAULT '1'");
 		$test_field = new NumericField(1.0);
-		$this->assertEqual($test_field->db_create_query(NULL, "test_field"), "test_field NUMERIC DEFAULT '1'");
+		$this->assertEqual($test_field->db_create_query($db, "test_field"), "test_field NUMERIC DEFAULT '1'");
 		$test_field = new NumericField();
-		$this->assertEqual($test_field->db_create_query(NULL, "test_field"), "test_field NUMERIC");
+		$this->assertEqual($test_field->db_create_query($db, "test_field"), "test_field NUMERIC");
+		$test_field = new IntField();
+		$this->assertEqual($test_field->db_create_query($db, "test_field"), "test_field INT DEFAULT '0'");
+		$test_field = new BigIntField();
+		$this->assertEqual($test_field->db_create_query($db, "test_field"), "test_field BIGINT DEFAULT '0'");
 		// TODO - test DB creation/validation when its coded
 	}
 	

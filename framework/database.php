@@ -17,7 +17,7 @@ class QueryException extends Exception { }
 abstract class Database
 {
 	private static $db;
-	protected $_link, $_connected, $_tables;
+	protected $_link, $_connected, $_tables, $_type;
 	
 	public static function create() {
 		if (Database::$db)
@@ -35,6 +35,7 @@ abstract class Database
 		if (Database::$db) {
 			Database::$db->connect();
 			Database::$db->populate_tables();
+			Database::$db->_type = $database_type;
 		}
 		return Database::$db;
 	}
@@ -42,6 +43,7 @@ abstract class Database
 	public function is_connected() { return $this->_connected; }
 	public function get_link() { return $this->_link; }
 	public function get_tables() { return $this->_tables; }
+	public function get_type() { return $this->_type; }
 	
 	protected abstract function connect();
 	public abstract function query($query, $args=array());

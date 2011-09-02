@@ -32,8 +32,11 @@ class MySQL extends Database
 		$vars = array();
 		foreach ($args as $arg)
 			array_push($vars, mysql_real_escape_string($arg));
-		$query = sprintf($format, $vars);
-		return mysql_query($query, $this->_link);
+		$query = sprintf($query, $vars);
+		$res = mysql_query($query, $this->_link);
+		if (strpos($query, "TABLE") > 0)
+			$this->populate_tables();
+		return $res;
 	}
 	
 	public function fetch($result) {

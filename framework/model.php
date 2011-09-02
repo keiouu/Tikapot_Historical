@@ -18,7 +18,7 @@ abstract class Model
 	
 	public function __construct() {
 		$this->table_name = $this->get_table_name();
-		$this->create_table();
+		$this->add_field("id", new PKField(0, $max_length=22, True));
 	}
 	
 	// Add a new field
@@ -116,7 +116,10 @@ abstract class Model
 				$values .= ", ";
 			}
 			$keys .= $field_name;
-			$values .= $field->db_insert_query($db);
+			$val = $field->db_insert_query($db);
+			if (strlen($val) <= 0)
+				$val = "''";
+			$values .= $val;
 		}
 		return "INSERT INTO " . $this->get_table_name() . " (" . $keys . ") VALUES (" . $values . ");";
 	}
@@ -128,6 +131,7 @@ abstract class Model
 	
 	// Saves the object to the database
 	public function save() {
+		$this->create_table();
 		$db = Database::create();
 		$query = "";
 		if (!$this->from_db)
