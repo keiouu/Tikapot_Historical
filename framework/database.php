@@ -16,32 +16,38 @@ class QueryException extends Exception { }
 
 abstract class Database
 {
-	protected $_link, $_connected;
+	private static $db;
+	protected $_link, $_connected, $_tables;
 	
 	public static function create() {
+		if (Database::$db)
+			return Database::$db;
+
 		global $database_type;
-		$db = NULL;
 		switch ($database_type) {
 			case "mysql":
-				$db = new MySQL();
+				Database::$db = new MySQL();
 				break;
 			case "psql":
-				$db = new PostgreSQL();
+				Database::$db = new PostgreSQL();
 				break;
 		}
-		if ($db) {
-			$db->connect();
+		if (Database::$db) {
+			Database::$db->connect();
+			Database::$db->populate_tables();
 		}
-		return $db;
+		return Database::$db;
 	}
 	
 	public function is_connected() { return $this->_connected; }
 	public function get_link() { return $this->_link; }
+	public function get_tables() { return $this->_tables; }
 	
 	protected abstract function connect();
 	public abstract function query($query, $args=array());
 	public abstract function fetch($result);
 	public abstract function disconnect();
+	public abstract function populate_tables();
 	
 	function __destruct() {
 		$this->disconnect();

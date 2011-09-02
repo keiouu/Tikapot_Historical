@@ -7,15 +7,28 @@
  * http://www.gnu.org/licenses/gpl-3.0.txt
  */
 
+global $home_dir;
+require_once($home_dir . "framework/database.php");
 require_once("model_fields/init.php");
 
-class Model
+abstract class Model
 {
-	protected $fields = array(), $errors = array();
+	protected $fields = array(), $errors = array(), $table_name = "";
+	
+	public function __construct() {
+		$this->table_name = $this->get_table_name();
+		$this->create_table();
+	}
 	
 	// Add a new field
 	protected function add_field($name, $type) {
 		$this->fields[$name] = $type;
+	}
+	
+	public function get_table_name() {
+		if ($this->table_name === "")
+			$this->table_name = strtolower(get_class($this));
+		return $this->table_name;
 	}
 	
 	// Get fields
@@ -47,9 +60,27 @@ class Model
 			$this->fields[$name]->reset();
 	}
 	
+	// Returns the query to create the table in the database
+	public function db_create_query($db) {
+		$table_name = $this->get_table_name();
+		$SQL = "CREATE TABLE " . $table_name . " (";
+		$i = 0;
+		foreach ($this->get_fields() as $name => $field) {
+			if ($i > 0) $SQL .= ", ";
+			$SQL .= $field->db_create_query($db, $name);
+			$i++;
+		}
+		$SQL .= ");";
+		return $SQL;
+	}
+	
 	// Creates the table in the database if needed
+	// Returns True on success, even if it didnt have to do anything
 	public function create_table() {
-		// TODO
+		$db = Database::create();
+		if (!in_array($this->get_table_name(), $db->get_tables()))
+			return $db->query($this->db_create_query($db));
+		return True;
 	}
 	
 	// Verifies that the table structure in the database is up-to-date

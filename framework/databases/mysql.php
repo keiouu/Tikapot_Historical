@@ -33,8 +33,7 @@ class MySQL extends Database
 		foreach ($args as $arg)
 			array_push($vars, mysql_real_escape_string($arg));
 		$query = sprintf($format, $vars);
-		try { $query = mysql_query($query, $this->_link); } catch(Exception $e) { throw new QueryException($e); }
-		return $query;
+		return mysql_query($query, $this->_link);
 	}
 	
 	public function fetch($result) {
@@ -48,6 +47,13 @@ class MySQL extends Database
 		if ($this->_connected) {
 			$this->_connected = !mysql_close($this->_link);
 		}
+	}
+	
+	public function populate_tables() {
+		$this->_tables = array();
+		$query = $this->query("SHOW TABLES");
+		while($result = $this->fetch($query))
+			array_push($this->_tables, $result[0]);
 	}
 }
 

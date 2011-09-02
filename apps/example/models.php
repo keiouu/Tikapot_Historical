@@ -14,6 +14,7 @@ require($home_dir . "framework/modelfields.php");
 class ExampleModel extends Model
 {	
 	public function __construct() {
+		parent::__construct();
 		$this->add_field("first_name", new CharField());
 		$this->add_field("last_name", new CharField());
 		$this->add_field("age", new NumericField());

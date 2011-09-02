@@ -27,7 +27,7 @@ abstract class ModelField
 	}
 	
 	public abstract function validate();
-	public abstract function db_create($db, $name);
+	public abstract function db_create_query($db, $name);
 }
 
 ?>

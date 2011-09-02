@@ -14,6 +14,7 @@ require_once($home_dir . "framework/model.php");
 class TestModel extends Model
 {
 	public function __construct() {
+		parent::__construct();
 		$this->add_field("test_prop", new CharField("", $max_length=7));
 		$this->add_field("other_prop", new NumericField(4.5));
 	}
@@ -22,20 +23,21 @@ class TestModel extends Model
 class ModelTest extends UnitTestCase {
 	function testModelDB() {
 		$obj = new TestModel();
+		$this->assertEqual($obj->db_create_query(NULL), "CREATE TABLE testmodel (test_prop VARCHAR (7), other_prop NUMERIC DEFAULT '4.5');");
+		$this->assertTrue($obj->create_table());
 		
 		$test_field = new CharField("test", $max_length=7);
-		$this->assertEqual($test_field->db_create(NULL, "test_field"), "test_field VARCHAR (7) DEFAULT 'test'");
+		$this->assertEqual($test_field->db_create_query(NULL, "test_field"), "test_field VARCHAR (7) DEFAULT 'test'");
 		$test_field = new CharField("test");
-		$this->assertEqual($test_field->db_create(NULL, "test_field"), "test_field VARCHAR DEFAULT 'test'");
+		$this->assertEqual($test_field->db_create_query(NULL, "test_field"), "test_field VARCHAR DEFAULT 'test'");
 		$test_field = new CharField();
-		$this->assertEqual($test_field->db_create(NULL, "test_field"), "test_field VARCHAR");
+		$this->assertEqual($test_field->db_create_query(NULL, "test_field"), "test_field VARCHAR");
 		$test_field = new NumericField(1.0, "4,2");
-		$this->assertEqual($test_field->db_create(NULL, "test_field"), "test_field NUMERIC (4,2) DEFAULT '1'");
+		$this->assertEqual($test_field->db_create_query(NULL, "test_field"), "test_field NUMERIC (4,2) DEFAULT '1'");
 		$test_field = new NumericField(1.0);
-		$this->assertEqual($test_field->db_create(NULL, "test_field"), "test_field NUMERIC DEFAULT '1'");
+		$this->assertEqual($test_field->db_create_query(NULL, "test_field"), "test_field NUMERIC DEFAULT '1'");
 		$test_field = new NumericField();
-		$this->assertEqual($test_field->db_create(NULL, "test_field"), "test_field NUMERIC");
-		
+		$this->assertEqual($test_field->db_create_query(NULL, "test_field"), "test_field NUMERIC");
 		// TODO - test DB creation/validation when its coded
 	}
 	

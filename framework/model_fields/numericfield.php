@@ -34,7 +34,7 @@ class NumericField extends ModelField
 		return True;
 	}
 	
-	public function db_create($db, $name) {
+	public function db_create_query($db, $name) {
 		$extra = "";
 		if ($this->precision !== "")
 			$extra .= " (" . $this->precision . ")";

@@ -32,7 +32,7 @@ class PostgreSQL extends Database
 		if (!$this->_connected) {
 			throw new NotConnectedException("Error: the database is not connected!");
 		}
-		return pg_query_params($this->_link, $query, $args) or $this->throw_query_exception("Error in query: " + $query);
+		return pg_query_params($this->_link, $query, $args);
 	}
 	
 	public function fetch($result) {
@@ -46,6 +46,13 @@ class PostgreSQL extends Database
 		if ($this->_connected) {
 			$this->_connected = !pg_close($this->_link);
 		}
+	}
+	
+	public function populate_tables() {
+		$this->_tables = array();
+		$query = $this->query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';");
+		while($result = $this->fetch($query))
+			array_push($this->_tables, $result["table_name"]);
 	}
 }
 
