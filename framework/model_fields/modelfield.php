@@ -9,8 +9,8 @@
 
 abstract class ModelField
 {
-	private static $db_type = "unknown";
-	private $default_value = "";
+	protected static $db_type = "unknown";
+	protected $default_value = "";
 	public $value = "", $errors = array();
 
 	public function __construct($default = "") {
@@ -27,6 +27,7 @@ abstract class ModelField
 	}
 	
 	public abstract function validate();
+	public abstract function db_create($db, $name);
 }
 
 ?>

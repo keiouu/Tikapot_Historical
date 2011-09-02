@@ -11,13 +11,21 @@ require_once("modelfield.php");
 
 class CharField extends ModelField
 {
-	private static $db_type = "varchar";
-	private $default_value = "", $max_length = 0;
-	public $value = "";
-
+	protected static $db_type = "varchar";
+	private $max_length = 0;
+	
 	public function __construct($default = "", $max_length = 0) {
 			parent::__construct($default);
 			$this->max_length = $max_length;
+	}
+	
+	public function db_create($db, $name) {
+		$extra = "";
+		if ($this->max_length > 0)
+			$extra .= " (" . $this->max_length . ")";
+		if ($this->default_value !== "")
+			$extra .= " DEFAULT '" . $this->default_value . "'";
+		return $name . " VARCHAR" . $extra;
 	}
 
 	public function validate() {

@@ -22,6 +22,20 @@ class TestModel extends Model
 class ModelTest extends UnitTestCase {
 	function testModelDB() {
 		$obj = new TestModel();
+		
+		$test_field = new CharField("test", $max_length=7);
+		$this->assertEqual($test_field->db_create(NULL, "test_field"), "test_field VARCHAR (7) DEFAULT 'test'");
+		$test_field = new CharField("test");
+		$this->assertEqual($test_field->db_create(NULL, "test_field"), "test_field VARCHAR DEFAULT 'test'");
+		$test_field = new CharField();
+		$this->assertEqual($test_field->db_create(NULL, "test_field"), "test_field VARCHAR");
+		$test_field = new NumericField(1.0, "4,2");
+		$this->assertEqual($test_field->db_create(NULL, "test_field"), "test_field NUMERIC (4,2) DEFAULT '1'");
+		$test_field = new NumericField(1.0);
+		$this->assertEqual($test_field->db_create(NULL, "test_field"), "test_field NUMERIC DEFAULT '1'");
+		$test_field = new NumericField();
+		$this->assertEqual($test_field->db_create(NULL, "test_field"), "test_field NUMERIC");
+		
 		// TODO - test DB creation/validation when its coded
 	}
 	
