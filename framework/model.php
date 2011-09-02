@@ -21,7 +21,9 @@ class Model
 	}
 	
 	// Get fields
-	public function get_fields() { return $this->fields; }
+	public function get_fields() {
+		return $this->fields;
+	}
 	
 	public function __get($name) {
 		if (isset($this->fields[$name]))
@@ -37,26 +39,38 @@ class Model
 	}
 	
 	// Basically: Is $name a valid field name? (Doesnt say if the field has been set)
-    public function __isset($name) {
-    	return isset($this->fields[$name]);
-    }
+	public function __isset($name) {
+		return isset($this->fields[$name]);
+	}
 	
 	// Unsetting a field resets it to default value
-    public function __unset($name) {
-    	if ($this->__isset($name))
-    		$this->fields[$name]->reset();
-    }
+	public function __unset($name) {
+		if ($this->__isset($name))
+			$this->fields[$name]->reset();
+	}
 	
 	// Creates the table in the database if needed
 	public function create_table() {
+		// TODO
 	}
 	
-	// Verifys that the table structure in the database is correct
+	// Verifys that the table structure in the database is up-to-date
 	public function verify_table() {
+		// TODO
+	}
+	
+	// Validates the model
+	public function validate() {
+		foreach ($this->get_fields() as $field_name => $field) {
+			if (!$field->validate())
+				return False;
+		}
+		return True;
 	}
 	
 	// Saves the object to the database
 	public function save() {
+		// TODO
 	}
 }
 
