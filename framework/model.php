@@ -7,6 +7,8 @@
  * http://www.gnu.org/licenses/gpl-3.0.txt
  */
 
+require_once("model_fields/init.php");
+
 class Model
 {
 	protected $fields;

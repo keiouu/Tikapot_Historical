@@ -10,10 +10,9 @@
 global $home_dir;
 require_once($home_dir . "lib/simpletest/autorun.php");
 require_once($home_dir . "framework/model.php");
-require_once($home_dir . "framework/modelfields.php");
 
 class TestModel extends Model
-{	
+{
 	public function __construct() {
 		$this->add_field("test_prop", new CharField($max_length=7));
 		$this->add_field("other_prop", new NumericField());
