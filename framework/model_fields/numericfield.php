@@ -16,7 +16,11 @@ class NumericField extends ModelField
 	public $value = 0.0; // __construct could take default
 
 	public function validate() {
-		return is_numeric($this->value);
+		if (!is_numeric($this->value)) {
+			array_push($this->errors, "Value is not numeric!");
+			return False;
+		}
+		return True;
 	}
 }
 

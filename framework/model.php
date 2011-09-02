@@ -11,11 +11,7 @@ require_once("model_fields/init.php");
 
 class Model
 {
-	protected $fields;
-	
-	public function __construct() {
-		$this->fields = array();
-	}
+	protected $fields = array(), $errors = array();
 	
 	// Add a new field
 	protected function add_field($name, $type) {
@@ -56,18 +52,26 @@ class Model
 		// TODO
 	}
 	
-	// Verifys that the table structure in the database is up-to-date
+	// Verifies that the table structure in the database is up-to-date
 	public function verify_table() {
 		// TODO
 	}
 	
 	// Validates the model
 	public function validate() {
+		$this->errors = array();
 		foreach ($this->get_fields() as $field_name => $field) {
-			if (!$field->validate())
+			if (!$field->validate()) {
+				$this->errors = array_merge($this->errors, $field->errors);
 				return False;
+			}
 		}
 		return True;
+	}
+
+	// Provides validation errors
+	public function get_errors() {
+		return $this->errors;
 	}
 	
 	// Saves the object to the database

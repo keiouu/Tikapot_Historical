@@ -14,7 +14,7 @@ require_once($home_dir . "framework/model.php");
 class TestModel extends Model
 {
 	public function __construct() {
-		$this->add_field("test_prop", new CharField($max_length=7));
+		$this->add_field("test_prop", new CharField("", $max_length=7));
 		$this->add_field("other_prop", new NumericField());
 	}
 }
@@ -45,8 +45,10 @@ class ModelTest extends UnitTestCase {
 		$obj = new TestModel();
 		$obj->test_prop = '123456789';
 		$this->assertFalse($obj->validate());
+		$this->assertTrue(count($obj->get_errors()) > 0);
 		$obj->test_prop = '1234567';
 		$this->assertTrue($obj->validate());
+		$this->assertTrue(count($obj->get_errors()) == 0);
 		$obj->test_prop = '123456';
 		$this->assertTrue($obj->validate());
 	}

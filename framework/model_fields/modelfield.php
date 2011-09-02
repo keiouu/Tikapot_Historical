@@ -11,7 +11,7 @@ abstract class ModelField
 {
 	private static $db_type = "unknown";
 	private $default_value = "";
-	public $value = "";
+	public $value = "", $errors = array();
 
 	public function __construct($default = "") {
 			$this->default_value = $default;
