@@ -64,13 +64,17 @@ abstract class Model
 	// Returns the query to create the table in the database
 	public function db_create_query($db) {
 		$table_name = $this->get_table_name();
+		$post_scripts = "";
 		$SQL = "CREATE TABLE " . $table_name . " (";
 		$i = 0;
 		foreach ($this->get_fields() as $name => $field) {
 			if ($i > 0) $SQL .= ", ";
 			$SQL .= $field->db_create_query($db, $name);
+			if (strlen($post_scripts) > 0) $post_scripts .= ", ";
+			$post_scripts .= $field->db_post_create_query($db);
 			$i++;
 		}
+		$SQL .= $post_scripts;
 		$SQL .= ");";
 		return $SQL;
 	}
