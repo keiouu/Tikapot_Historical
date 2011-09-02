@@ -24,7 +24,9 @@ class ModelTest extends UnitTestCase {
 	function testModelDB() {
 		$obj = new TestModel();
 		$this->assertEqual($obj->db_create_query(NULL), "CREATE TABLE testmodel (test_prop VARCHAR (7), other_prop NUMERIC DEFAULT '4.5');");
+		$this->assertEqual($obj->insert_query(NULL), "INSERT INTO testmodel (test_prop, other_prop) VALUES ('', 4.5);");
 		$this->assertTrue($obj->create_table());
+		$this->assertTrue($obj->save());
 		
 		$test_field = new CharField("test", $max_length=7);
 		$this->assertEqual($test_field->db_create_query(NULL, "test_field"), "test_field VARCHAR (7) DEFAULT 'test'");

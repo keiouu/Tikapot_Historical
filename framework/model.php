@@ -13,6 +13,7 @@ require_once("model_fields/init.php");
 
 abstract class Model
 {
+	private $from_db = False;
 	protected $fields = array(), $errors = array(), $table_name = "";
 	
 	public function __construct() {
@@ -105,9 +106,35 @@ abstract class Model
 		return $this->errors;
 	}
 	
+	// Insert the object to the database
+	public function insert_query($db) {
+		$keys = "";
+		$values = "";
+		foreach ($this->get_fields() as $field_name => $field) {
+			if (strlen($keys) > 0) {
+				$keys .= ", ";
+				$values .= ", ";
+			}
+			$keys .= $field_name;
+			$values .= $field->db_insert_query($db);
+		}
+		return "INSERT INTO " . $this->get_table_name() . " (" . $keys . ") VALUES (" . $values . ");";
+	}
+	
+	// Insert the object to the database
+	public function update_query($db) {
+		// TODO
+	}
+	
 	// Saves the object to the database
 	public function save() {
-		// TODO
+		$db = Database::create();
+		$query = "";
+		if (!$this->from_db)
+			$query = $this->insert_query($db);
+		else
+			$query = $this->update_query($db);
+		return $db->query($query);
 	}
 }
 

@@ -28,6 +28,11 @@ abstract class ModelField
 	
 	public abstract function validate();
 	public abstract function db_create_query($db, $name);
+	
+	/* This allows subclasses to over-write table insert if desired */
+	public function db_insert_query($db) {
+		return $this->value;
+	}
 }
 
 ?>

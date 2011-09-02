@@ -18,6 +18,14 @@ class CharField extends ModelField
 			parent::__construct($default);
 			$this->max_length = $max_length;
 	}
+
+	public function validate() {
+		if ($this->max_length > 0 && strlen($this->value) > $this->max_length) {
+			array_push($this->errors, "Value is longer than max_length");
+			return False;
+		}
+		return True;
+	}
 	
 	public function db_create_query($db, $name) {
 		$extra = "";
@@ -27,13 +35,9 @@ class CharField extends ModelField
 			$extra .= " DEFAULT '" . $this->default_value . "'";
 		return $name . " VARCHAR" . $extra;
 	}
-
-	public function validate() {
-		if ($this->max_length > 0 && strlen($this->value) > $this->max_length) {
-			array_push($this->errors, "Value is longer than max_length");
-			return False;
-		}
-		return True;
+	
+	public function db_insert_query($db) {
+		return "'" . $this->value . "'";
 	}
 }
 
