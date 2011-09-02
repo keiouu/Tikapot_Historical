@@ -27,7 +27,7 @@ class CharField extends ModelField
 		return True;
 	}
 	
-	public function db_create_query($db, $name) {
+	public function db_create_query($db, $name, $table_name) {
 		$extra = "";
 		if ($this->max_length > 0)
 			$extra .= " (" . $this->max_length . ")";

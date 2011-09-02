@@ -69,22 +69,42 @@ abstract class Model
 		$i = 0;
 		foreach ($this->get_fields() as $name => $field) {
 			if ($i > 0) $SQL .= ", ";
-			$SQL .= $field->db_create_query($db, $name);
-			if (strlen($post_scripts) > 0) $post_scripts .= ", ";
-			$post_scripts .= $field->db_post_create_query($db);
+			$SQL .= $field->db_create_query($db, $name, $table_name);
 			$i++;
+			$post_query = $field->db_post_create_query($db, $name, $table_name);
+			if (strlen($post_scripts) > 0 && strlen($post_query) > 0)
+				$post_scripts .= ", ";
+			if (strlen($post_query) > 0)
+				$post_scripts .= $post_query;
 		}
-		$SQL .= $post_scripts;
+		if (strlen($post_scripts) > 0)
+			$SQL .= ", " . $post_scripts;
 		$SQL .= ");";
+		
 		return $SQL;
+	}
+	
+	public function db_create_extra_queries($db) {
+		$table_name = $this->get_table_name();
+		$extra_scripts = array();
+		foreach ($this->get_fields() as $name => $field) {
+			$query = $field->db_extra_create_query($db, $name, $table_name);
+			if (strlen($query) > 0)
+				array_push($extra_scripts, $query);
+		}
+		return $extra_scripts;
 	}
 	
 	// Creates the table in the database if needed
 	// Returns True on success, even if it didnt have to do anything
 	public function create_table() {
 		$db = Database::create();
-		if (!in_array($this->get_table_name(), $db->get_tables()))
-			return $db->query($this->db_create_query($db));
+		if (!in_array($this->get_table_name(), $db->get_tables())) {
+			$res = $db->query($this->db_create_query($db));
+			foreach($this->db_create_extra_queries($db) as $query)
+				$db->query($query);
+			return $res;
+		}
 		return True;
 	}
 	
@@ -115,6 +135,8 @@ abstract class Model
 		$keys = "";
 		$values = "";
 		foreach ($this->get_fields() as $field_name => $field) {
+			if ($field->hide_from_query)
+				continue;
 			if (strlen($keys) > 0) {
 				$keys .= ", ";
 				$values .= ", ";

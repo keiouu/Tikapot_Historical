@@ -34,7 +34,7 @@ class NumericField extends ModelField
 		return True;
 	}
 	
-	public function db_create_query($db, $name) {
+	public function db_create_query($db, $name, $table_name) {
 		$extra = "";
 		if (strlen($extra) > 0)
 			$extra = ' ' . $extra;

@@ -11,7 +11,7 @@ abstract class ModelField
 {
 	protected static $db_type = "unknown";
 	protected $default_value = "";
-	public $value = "", $errors = array(), $_extra = "";
+	public $value = "", $errors = array(), $_extra = "", $hide_from_query = False;
 
 	public function __construct($default = "", $_extra = "") {
 			$this->default_value = $default;
@@ -28,10 +28,15 @@ abstract class ModelField
 	}
 	
 	public abstract function validate();
-	public abstract function db_create_query($db, $name);
+	public abstract function db_create_query($db, $name, $table_name);
 	
 	/* This allows subclasses to provide end-of-statement additions such as constraints */
-	public function db_post_create_query($db) {
+	public function db_post_create_query($db, $name, $table_name) {
+		return "";
+	}
+	
+	/* This allows subclasses to provide extra, separate queries on createdb such as sequences */
+	public function db_extra_create_query($db, $name, $table_name) {
 		return "";
 	}
 	

@@ -18,6 +18,7 @@ class IntField extends ModelField
 			parent::__construct($default, $_extra);
 			$this->max_length = $max_length;
 			$this->auto_increment = $auto_increment;
+			$this->hide_from_query = $auto_increment;
 	}
 
 	public function validate() {
@@ -32,19 +33,32 @@ class IntField extends ModelField
 		return True;
 	}
 	
-	public function db_create_query($db, $name) {
+	protected function sequence_name($db, $name, $table_name) {
+		return $table_name."_".$name."_seq";
+	}
+	
+	public function db_create_query($db, $name, $table_name) {
 		$extra = "";
 		if (strlen($extra) > 0)
 			$extra = ' ' . $extra;
 		if ($db->get_type() != "psql" && $this->max_length > 0)
 			$extra .= " (" . $this->max_length . ")";
-		if (strlen($this->default_value) > 0)
+		if (!$this->auto_increment && strlen($this->default_value) > 0)
 			$extra .= " DEFAULT '" . $this->default_value . "'";
-		if ($db->get_type() == "mysql" && $this->auto_increment)
-			$extra .= " AUTO_INCREMENT";
+		if ($this->auto_increment)
+			if ($db->get_type() == "mysql")
+				$extra .= " AUTO_INCREMENT";
+			if ($db->get_type() == "psql")
+				$extra .= " DEFAULT nextval('".$this->sequence_name($db, $name, $table_name)."')";
 		if (strlen($this->_extra) > 0)
 			$extra .= ' ' . $this->_extra;
 		return $name . " " . $this::$db_type . $extra;
+	}
+	
+	public function db_extra_create_query($db, $name, $table_name) {
+		if ($db->get_type() == "psql" && $this->auto_increment)
+			return "CREATE SEQUENCE ".$this->sequence_name($db, $name, $table_name).";";
+		return "";
 	}
 }
 
