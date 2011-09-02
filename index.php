@@ -10,6 +10,7 @@
 ini_set('display_errors', '1');
 
 $home_dir = dirname(__FILE__) . '/';
+require("config.php");
 include("tests/init.php");
 ?>
 

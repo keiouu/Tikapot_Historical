@@ -13,25 +13,31 @@ require_once($home_dir . "framework/database.php");
 
 class PostgreSQL extends Database
 {
-	public function connect() {
+	protected function connect() {
 		global 	$database_host,
 				$database_name,
 				$database_username,
 				$database_password;
 		$this->_link = pg_connect("host=$database_host user=$database_username password=$database_password dbname=$database_name connect_timeout=5");
 		$this->_connected = isset($this->_link);
+		if (!$this->_connected)
+			throw new NotConnectedException("Error: Could not connect to the database server.");
 	}
 	
-	public function query($query) {
+	private function throw_query_exception($e) {
+		throw new QueryException($e);
+	}
+	
+	public function query($query, $args=array()) {
 		if (!$this->_connected) {
-			throw new NotConnectedException("Error, the database is not connected!");
+			throw new NotConnectedException("Error: the database is not connected!");
 		}
-		return pg_query($this->_link, $query);
+		return pg_query_params($this->_link, $query, $args) or $this->throw_query_exception("Error in query: " + $query);
 	}
 	
 	public function fetch($result) {
 		if (!$this->_connected) {
-			throw new NotConnectedException("Error, the database is not connected!");
+			throw new NotConnectedException("Error: the database is not connected!");
 		}
 		return pg_fetch_array($result, NULL, PGSQL_BOTH);
 	}

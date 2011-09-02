@@ -7,6 +7,7 @@
  * http://www.gnu.org/licenses/gpl-3.0.txt
  */
 
+global $home_dir;
 require_once($home_dir . "lib/simpletest/autorun.php");
 
 class AllTests extends TestSuite {

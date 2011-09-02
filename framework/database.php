@@ -12,6 +12,7 @@ include_once("databases/mysql.php");
 include_once("databases/postgres.php");
 
 class NotConnectedException extends Exception { }
+class QueryException extends Exception { }
 
 abstract class Database
 {
@@ -34,8 +35,11 @@ abstract class Database
 		return $db;
 	}
 	
-	public abstract function connect();
-	public abstract function query($query);
+	public function is_connected() { return $this->_connected; }
+	public function get_link() { return $this->_link; }
+	
+	protected abstract function connect();
+	public abstract function query($query, $args=array());
 	public abstract function fetch($result);
 	public abstract function disconnect();
 	
