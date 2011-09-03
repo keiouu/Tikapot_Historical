@@ -9,7 +9,8 @@
 
 global $home_dir;
 require_once($home_dir . "framework/database.php");
-require_once("model_fields/init.php");
+require_once($home_dir . "framework/model_manager.php");
+require_once($home_dir . "framework/model_fields/init.php");
 
 abstract class Model
 {
@@ -18,7 +19,12 @@ abstract class Model
 	
 	public function __construct() {
 		$this->table_name = $this->get_table_name();
-		$this->add_field("id", new PKField(0, $max_length=22, True));
+		$this->add_field("id", new PKField(0, $max_length=22, True)); // TODO - validation check: only one pk field
+	}
+	
+	// Allows access to stored models
+	public function get() {
+		return new ModelManager();
 	}
 	
 	// Add a new field
@@ -159,7 +165,10 @@ abstract class Model
 				$val = "''";
 			$values .= $val;
 		}
-		return "INSERT INTO " . $this->get_table_name() . " (" . $keys . ") VALUES (" . $values . ");";
+		$extra = "";
+		if ($db->get_type() == "psql")
+			$extra = " RETURNING id";
+		return "INSERT INTO " . $this->get_table_name() . " (" . $keys . ") VALUES (" . $values . ")" . $extra . ";";
 	}
 	
 	// Insert the object to the database
@@ -167,16 +176,29 @@ abstract class Model
 		// TODO
 	}
 	
-	// Saves the object to the database
+	// Saves the object to the database, returns ID
 	public function save() {
+		if (!$this->validate())
+			return False;
 		$this->create_table();
 		$db = Database::create();
 		$query = "";
-		if (!$this->from_db)
-			$query = $this->insert_query($db);
-		else
-			$query = $this->update_query($db);
-		return $db->query($query);
+		if (!$this->from_db) {
+			$query = $db->query($this->insert_query($db));
+			$id = 0;
+			if ($db->get_type() == "psql") {
+				$row = $db->fetch($query);
+				$id = $row[0];
+			}
+			if ($db->get_type() == "mysql")
+				$id = mysql_insert_id();
+			$this->id = $id;
+			$this->from_db = True;
+		}
+		else {
+			$query = $db->query($this->update_query($db));
+		}
+		return $this->id;
 	}
 }
 

@@ -22,17 +22,29 @@ class TestModel extends Model
 }
 
 class ModelTest extends UnitTestCase {
+	function testModelManager() {
+		$db = Database::create();
+		$obj = new TestModel();
+		$obj->test_prop = "Hello";
+		$obj->other_prop = 1.0;
+		$id = $obj->save();
+		$this->assertTrue($id > 0);
+	}
+	
 	function testModelDB() {
 		$db = Database::create();
 		$obj = new TestModel();
 		if ($db->get_type() == "mysql") {
 			$this->assertEqual($obj->db_create_query($db), "CREATE TABLE testmodel (id BIGINT (22) AUTO_INCREMENT PRIMARY KEY, test_prop VARCHAR (7), other_prop NUMERIC DEFAULT '4.5');");
 		}
-		else {
+		if ($db->get_type() == "psql") {
 			$this->assertEqual($obj->db_create_query($db), "CREATE TABLE testmodel (id BIGINT DEFAULT nextval('testmodel_id_seq'), test_prop VARCHAR (7), other_prop NUMERIC DEFAULT '4.5', CONSTRAINT testmodel_pkey PRIMARY KEY (id));");
 			$this->assertEqual($obj->db_create_extra_queries_pre($db, "testmodel"), array("CREATE SEQUENCE testmodel_id_seq;"));
 		}
-		$this->assertEqual($obj->insert_query($db), "INSERT INTO testmodel (test_prop, other_prop) VALUES ('', 4.5);");
+		if ($db->get_type() == "mysql")
+			$this->assertEqual($obj->insert_query($db), "INSERT INTO testmodel (test_prop, other_prop) VALUES ('', 4.5);");
+		if ($db->get_type() == "psql")
+			$this->assertEqual($obj->insert_query($db), "INSERT INTO testmodel (test_prop, other_prop) VALUES ('', 4.5) RETURNING id;");
 		$this->assertTrue($obj->create_table());
 		$this->assertTrue($obj->save());
 		
@@ -52,7 +64,7 @@ class ModelTest extends UnitTestCase {
 		$this->assertEqual($test_field->db_create_query($db, "test_field", "testmodel"), "test_field INT DEFAULT '0'");
 		$test_field = new BigIntField();
 		$this->assertEqual($test_field->db_create_query($db, "test_field", "testmodel"), "test_field BIGINT DEFAULT '0'");
-		// TODO - test DB creation/validation when its coded
+		// TODO - test DB validation when its coded
 	}
 	
 	function testModels() {
