@@ -30,7 +30,7 @@ class ModelTest extends UnitTestCase {
 		}
 		else {
 			$this->assertEqual($obj->db_create_query($db), "CREATE TABLE testmodel (id BIGINT DEFAULT nextval('testmodel_id_seq'), test_prop VARCHAR (7), other_prop NUMERIC DEFAULT '4.5', CONSTRAINT testmodel_pkey PRIMARY KEY (id));");
-			$this->assertEqual($obj->db_create_extra_queries_pre($db), array("CREATE SEQUENCE testmodel_id_seq;"));
+			$this->assertEqual($obj->db_create_extra_queries_pre($db, "testmodel"), array("CREATE SEQUENCE testmodel_id_seq;"));
 		}
 		$this->assertEqual($obj->insert_query($db), "INSERT INTO testmodel (test_prop, other_prop) VALUES ('', 4.5);");
 		$this->assertTrue($obj->create_table());

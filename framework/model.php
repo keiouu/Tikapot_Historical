@@ -84,8 +84,7 @@ abstract class Model
 		return $SQL;
 	}
 	
-	public function db_create_extra_queries_pre($db) {
-		$table_name = $this->get_table_name();
+	public function db_create_extra_queries_pre($db, $table_name) {
 		$extra_scripts = array();
 		foreach ($this->get_fields() as $name => $field) {
 			$query = $field->db_extra_create_query_pre($db, $name, $table_name);
@@ -95,8 +94,7 @@ abstract class Model
 		return $extra_scripts;
 	}
 	
-	public function db_create_extra_queries_post($db) {
-		$table_name = $this->get_table_name();
+	public function db_create_extra_queries_post($db, $table_name) {
 		$extra_scripts = array();
 		foreach ($this->get_fields() as $name => $field) {
 			$query = $field->db_extra_create_query_post($db, $name, $table_name);
@@ -110,11 +108,12 @@ abstract class Model
 	// Returns True on success, even if it didnt have to do anything
 	public function create_table() {
 		$db = Database::create();
+		$table_name = $this->get_table_name();
 		if (!in_array($this->get_table_name(), $db->get_tables())) {
-			foreach($this->db_create_extra_queries_pre($db) as $query)
+			foreach($this->db_create_extra_queries_pre($db, $table_name) as $query)
 				$db->query($query);
 			$res = $db->query($this->db_create_query($db));
-			foreach($this->db_create_extra_queries_post($db) as $query)
+			foreach($this->db_create_extra_queries_post($db, $table_name) as $query)
 				$db->query($query);
 			return $res;
 		}
