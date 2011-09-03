@@ -33,7 +33,7 @@ class PostgreSQL extends Database
 			throw new NotConnectedException("Error: the database is not connected!");
 		}
 		$res = pg_query_params($this->_link, $query, $args);
-		if (strpos($query, "TABLE") > 0)
+		if (strpos($query, "ATE TABLE") > 0 || strpos($query, "OP TABLE") > 0)
 			$this->populate_tables();
 		return $res;
 	}

@@ -26,7 +26,7 @@ class ModelTest extends UnitTestCase {
 		$db = Database::create();
 		$obj = new TestModel();
 		if ($db->get_type() == "mysql") {
-			$this->assertEqual($obj->db_create_query($db), "CREATE TABLE testmodel (id BIGINT (22) DEFAULT '0' PRIMARY KEY, test_prop VARCHAR (7), other_prop NUMERIC DEFAULT '4.5');");
+			$this->assertEqual($obj->db_create_query($db), "CREATE TABLE testmodel (id BIGINT (22) AUTO_INCREMENT PRIMARY KEY, test_prop VARCHAR (7), other_prop NUMERIC DEFAULT '4.5');");
 		}
 		else {
 			$this->assertEqual($obj->db_create_query($db), "CREATE TABLE testmodel (id BIGINT DEFAULT nextval('testmodel_id_seq'), test_prop VARCHAR (7), other_prop NUMERIC DEFAULT '4.5', CONSTRAINT testmodel_pkey PRIMARY KEY (id));");
