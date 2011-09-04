@@ -9,7 +9,7 @@
 
 global $home_dir;
 require_once($home_dir . "framework/database.php");
-require_once($home_dir . "framework/model_manager.php");
+require_once($home_dir . "framework/model_query.php");
 require_once($home_dir . "framework/model_fields/init.php");
 
 abstract class Model
@@ -23,8 +23,21 @@ abstract class Model
 	}
 	
 	// Allows access to stored models
-	public function get() {
-		return new ModelManager();
+	// Returns an array of objects matching the query
+	public function find($query) {
+		return new ModelQuery($this->table_name, $query);
+	}
+	
+	// Allows access to stored models
+	// Returns a single object
+	// Errors if multiple objects are found or no objects are found
+	public function get($id=0) {
+		$results = $this->find(array("id" => $id));
+		if ($results->count() == 0)
+			throw new ModelQueryException("No objects matching query exist");
+		if ($results->count() > 1)
+			throw new ModelQueryException("Multiple objects matching query exist in get()");
+		return $results.get(0);
 	}
 	
 	// Add a new field
