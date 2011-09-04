@@ -18,8 +18,8 @@ class ModelQuery
 	
 	/* $query should conform to the following structure (each line optional):
 	 *  (
-	 *    WHERE => (COL => Val, COL => (OPER => Val), etc),   /* Default: = */ 
-	 *    ORDER_BY => (COL, COL => DESC/ASC, etc),            /* Default: DESC */
+	 *    WHERE => (COL => Val, COL => (Val, OPER), etc),   Default: =
+	 *    ORDER_BY => (COL, (COL, DESC/ASC), etc),          Default: DESC
 	 *    ONLY => (COL, COL, etc),
 	 *  )
 	 *  TODO - more clauses
@@ -62,12 +62,21 @@ class ModelQuery
 					if ($count > 1)
 						$clauses .= " AND ";
 					$clauses .= $name;
+					$op = "";
 					if ($clause === "WHERE")
-						$clauses .= "=" . $val;
+						$op = "=";
+					if ($clause === "ORDER_BY")
+						$op = ", ";
+					if (is_array($val)) {
+						$op = $val[1];
+						$val = $val[0];
+					}
+					if ($clause === "WHERE")
+						$clauses .= $op . $val;
 					if ($clause === "ORDER_BY" && $count == 0)
-						$clauses .= "=" . $val;
+						$clauses .= $val . $op;
 					if ($clause === "ORDER_BY" && $count > 0)
-						$clauses .= ", " . $val;
+						$clauses .= ", " . $val . $op;
 					$count++;
 				}
 			}
