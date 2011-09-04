@@ -219,8 +219,8 @@ abstract class Model
 		}
 		$query .= " WHERE " . $this->_pk() . "=" . $this->pk;
 		if ($go)
-			return $db->query($query);
-		return True; // Nothing to do
+			return $query;
+		return ""; // Nothing to do
 	}
 	
 	// Saves the object to the database, returns ID
@@ -243,7 +243,9 @@ abstract class Model
 			$this->from_db = True;
 		}
 		else {
-			$query = $db->query($this->update_query($db));
+			$query = $this->update_query($db);
+			if (strlen($query) > 0)
+				$db->query($query);
 		}
 		return $this->pk;
 	}
