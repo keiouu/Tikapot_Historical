@@ -19,25 +19,32 @@ abstract class Model
 	
 	public function __construct() {
 		$this->table_name = $this->get_table_name();
-		$this->add_field("id", new PKField(0, $max_length=22, True)); // TODO - validation check: only one pk field
+		$this->add_field("id", new PKField(0, $max_length = 22, True)); // TODO - validation check: only one pk field
+	}
+	
+	/* Load field values from query result */
+	public function load_query_values($result) {
+		foreach ($this->fields as $name => $field)
+			if (isset($result[$name]))
+				$field->value = $result[$name];
 	}
 	
 	// Allows access to stored models
 	// Returns an array of objects matching the query
 	public function find($query) {
-		return new ModelQuery($this->table_name, $query);
+		return new ModelQuery($this, $query);
 	}
 	
 	// Allows access to stored models
 	// Returns a single object
 	// Errors if multiple objects are found or no objects are found
-	public function get($id=0) {
+	public function get($id = 0) {
 		$results = $this->find(array("id" => $id));
 		if ($results->count() == 0)
 			throw new ModelQueryException("No objects matching query exist");
 		if ($results->count() > 1)
 			throw new ModelQueryException("Multiple objects matching query exist in get()");
-		return $results.get(0);
+		return $results->get(0);
 	}
 	
 	// Add a new field
