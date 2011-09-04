@@ -18,9 +18,9 @@ class ModelQuery
 	
 	/* $query should conform to the following structure (each line optional):
 	 *  (
-	 *    WHERE => (COL => Val, COL => (OPER => Val), etc), 
-	 *    ORDER_BY => (COL => DESC/ASC, COL => DESC/ASC, etc),
-	 *    DEFER => (COL, COL, etc),
+	 *    WHERE => (COL => Val, COL => (OPER => Val), etc),   /* Default: = */ 
+	 *    ORDER_BY => (COL, COL => DESC/ASC, etc),            /* Default: DESC */
+	 *    ONLY => (COL, COL, etc),
 	 *  )
 	 *  TODO - more clauses
 	 */
@@ -50,7 +50,7 @@ class ModelQuery
 		foreach ($this->_query as $clause => $criterion) {
 			$count = 0;
 			foreach ($criterion as $name => $val) {
-				if ($clause === "DEFER") {
+				if ($clause === "ONLY") {
 					if ($count == 0)
 						$selection = "($val";
 					else
@@ -61,11 +61,17 @@ class ModelQuery
 						$clauses .= " $clause ";
 					if ($count > 1)
 						$clauses .= " AND ";
-					$clauses .= $name . "=" . $val;
+					$clauses .= $name;
+					if ($clause === "WHERE")
+						$clauses .= "=" . $val;
+					if ($clause === "ORDER_BY" && $count == 0)
+						$clauses .= "=" . $val;
+					if ($clause === "ORDER_BY" && $count > 0)
+						$clauses .= ", " . $val;
 					$count++;
 				}
 			}
-			if ($clause === "DEFER")
+			if ($clause === "ONLY")
 				$selection .= ")";
 		}
 		if (strlen($start) == 0) {
