@@ -12,6 +12,7 @@ require_once($home_dir . "framework/database.php");
 
 class ModelQueryException extends Exception { }
 
+/* TODO: enable models to override modelquery, having custom managers */
 class ModelQuery
 {
 	private $_model, $_query, $_objects, $_count, $_has_run;
@@ -22,7 +23,7 @@ class ModelQuery
 	 *    ORDER_BY => (COL, (COL, DESC/ASC), etc),          Default: DESC
 	 *    ONLY => (COL, COL, etc),
 	 *  )
-	 *  TODO - more clauses
+	 *  TODO: more clauses
 	 */
 	public function __construct($model, $query) {
 		$this->_has_run = False;

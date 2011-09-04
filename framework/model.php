@@ -19,8 +19,13 @@ abstract class Model
 	
 	public function __construct() {
 		$this->table_name = $this->get_table_name();
-		$this->add_field("id", new PKField(0, $max_length = 22, True)); // TODO - validation check: only one pk field
+		$this->add_field("id", new PKField(0, $max_length = 22, True));
+		// TODO: validation check: only one pk field
+		// TODO: validation check: ensure pk field is first field
 	}
+	
+	/* Allows custom primary keys */
+	protected function _pk() { return "id"; }
 	
 	/* Load field values from query result */
 	public function load_query_values($result) {
@@ -32,15 +37,15 @@ abstract class Model
 	// Allows access to stored models
 	// Returns a modelquery object containing the elements
 	// $query should be in the following format: (COL => Val, COL => (OPER => Val), etc)
-	public function find($query) {
+	public static function find($query) {
 		return new ModelQuery($this, array("WHERE" => $query));
 	}
 	
 	// Allows access to stored models
 	// Returns a single object
 	// Errors if multiple objects are found or no objects are found
-	public function get($id = 0) {
-		$results = $this->find(array("id" => $id));
+	public static function get($id = 0) {
+		$results = self::find(array("id" => $id));
 		if ($results->count() == 0)
 			throw new ModelQueryException("No objects matching query exist");
 		if ($results->count() > 1)
@@ -65,13 +70,17 @@ abstract class Model
 	}
 	
 	public function __get($name) {
+		if ($name == "pk")
+			return $this->fields[$this->_pk()]->value;
 		if (isset($this->fields[$name]))
 			return $this->fields[$name]->value;
 		throw new Exception("Invalid model field '$name'.");
 	}
 	
 	public function __set($name, $value) {
-		if (isset($this->fields[$name]))
+		if ($name == "pk")
+			$this->fields[$this->_pk()]->value = $value;
+		else if (isset($this->fields[$name]))
 			$this->fields[$name]->value = $value;
 		else
 			throw new Exception("Invalid model field '$name'.");
@@ -79,11 +88,15 @@ abstract class Model
 	
 	// Basically: Is $name a valid field name? (Doesnt say if the field has been set)
 	public function __isset($name) {
+		if ($name == "pk")
+			return True;
 		return isset($this->fields[$name]);
 	}
 	
 	// Unsetting a field resets it to default value
 	public function __unset($name) {
+		if ($name == "pk")
+			return;
 		if ($this->__isset($name))
 			$this->fields[$name]->reset();
 	}
@@ -149,7 +162,7 @@ abstract class Model
 	
 	// Verifies that the table structure in the database is up-to-date
 	public function verify_table() {
-		// TODO
+		// TODO: complete
 	}
 	
 	// Validates the model
@@ -194,7 +207,7 @@ abstract class Model
 	
 	// Insert the object to the database
 	public function update_query($db) {
-		// TODO
+		// TODO: complete
 	}
 	
 	// Saves the object to the database, returns ID
@@ -213,13 +226,13 @@ abstract class Model
 			}
 			if ($db->get_type() == "mysql")
 				$id = mysql_insert_id();
-			$this->id = $id;
+			$this->pk() = $id;
 			$this->from_db = True;
 		}
 		else {
 			$query = $db->query($this->update_query($db));
 		}
-		return $this->id;
+		return $this->pk();
 	}
 }
 
