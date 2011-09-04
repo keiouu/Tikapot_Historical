@@ -43,7 +43,7 @@ class ModelQuery
 		return $obj;
 	}
 	
-	private function _get_query($start = "") {
+	private function _build_query($start = "") {
 		$clauses = "";
 		$count = 0;
 		$selection = '*';
@@ -97,7 +97,7 @@ class ModelQuery
 		
 		// Get objects
 		$db = Database::create();
-		$query = $db->query($this->_get_query());
+		$query = $db->query($this->_build_query());
 		while($result = $db->fetch($query)) {
 			array_push($this->_objects, $this->_get_object_from_result($result));
 			$this->_count++;
@@ -111,7 +111,7 @@ class ModelQuery
 		if ($this->_has_run)
 			return $this->_count;
 		$db = Database::create();
-		$query = $db->query($this->_get_query("SELECT COUNT(*) FROM"));
+		$query = $db->query($this->_build_query("SELECT COUNT(*) FROM"));
 		$result = $db->fetch($query);
 		$this->_count = $result[0];
 		return $result[0];
