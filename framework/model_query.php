@@ -16,7 +16,14 @@ class ModelQuery
 {
 	private $_model, $_query, $_objects, $_count, $_has_run;
 	
-	/* For now this only supports the WHERE clauses */
+	/* $query should conform to the following structure (each line optional):
+	 *  (
+	 *    WHERE => (COL => Val, COL => (OP => Val), etc), 
+	 *    ORDER => (COL => DESC/ASC, COL => DESC/ASC, etc),
+	 *    DEFER => (COL, COL, etc),
+	 *  )
+	 *  TODO - more clauses
+	 */
 	public function __construct($model, $query) {
 		$this->_has_run = False;
 		$this->_model = $model;
@@ -36,14 +43,7 @@ class ModelQuery
 		return $obj;
 	}
 	
-	/* Run this query */
-	private function _run() {
-		// Reset
-		$this->_objects = array();
-		$this->_count = 0;
-		
-		// Build clauses
-		// TODO - implement more clauses
+	private function _get_query($start = "SELECT * FROM ") {
 		$clauses = "";
 		$count = 0;
 		foreach ($this->_query as $name => $val) {
@@ -51,13 +51,21 @@ class ModelQuery
 				$clauses .= " WHERE ";
 			if ($count > 1)
 				$clauses .= " AND ";
-			$clauses .= $name . "='" . $val . "'";
+			$clauses .= $name . "=" . $val;
 			$count++;
 		}
+		return $start . $this->_model->get_table_name() . "$clauses;";
+	}
+	
+	/* Run this query */
+	private function _run() {
+		// Reset
+		$this->_objects = array();
+		$this->_count = 0;
 		
 		// Get objects
 		$db = Database::create();
-		$query = $db->query("SELECT * FROM " . $this->_model->get_table_name() . "$clauses;");
+		$query = $db->query($this->_get_query());
 		while($result = $db->fetch($query)) {
 			array_push($this->_objects, $this->_get_object_from_result($result));
 			$this->_count++;
@@ -68,8 +76,13 @@ class ModelQuery
 	
 	/* Returns the number of objects in this query */
 	public function count() {
-		$this->_ensure_run();
-		return $this->_count;
+		if ($this->_has_run)
+			return $this->_count;
+		$db = Database::create();
+		$query = $db->query($this->_get_query("SELECT COUNT(*) FROM "));
+		$result = $db->fetch($query);
+		$this->_count = $result[0];
+		return $result[0];
 	}
 	
 	/* Returns the nth object in this query */
@@ -91,6 +104,11 @@ class ModelQuery
 		for ($i = $n; $i < count($this->_objects); ++$i)
 			array_push($objects, $this->_objects[$i]);
 		return $objects;
+	}
+	
+	/* Orders elements by <col> */
+	public function order_by($col) {
+		
 	}
 }
 
