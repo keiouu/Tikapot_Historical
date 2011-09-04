@@ -3,8 +3,8 @@
  * Tikapot Model System
  *
  * Copyright 2011, AUTHORS.txt
- * Licensed under the GPL Version 3 license.
- * http://www.gnu.org/licenses/gpl-3.0.txt
+ * Licensed under the Keiouu v1.0 License.
+ * See LICENSE.txt
  */
 
 global $home_dir;
@@ -18,8 +18,8 @@ class ModelQuery
 	
 	/* $query should conform to the following structure (each line optional):
 	 *  (
-	 *    WHERE => (COL => Val, COL => (OP => Val), etc), 
-	 *    ORDER => (COL => DESC/ASC, COL => DESC/ASC, etc),
+	 *    WHERE => (COL => Val, COL => (OPER => Val), etc), 
+	 *    ORDER_BY => (COL => DESC/ASC, COL => DESC/ASC, etc),
 	 *    DEFER => (COL, COL, etc),
 	 *  )
 	 *  TODO - more clauses
@@ -43,18 +43,35 @@ class ModelQuery
 		return $obj;
 	}
 	
-	private function _get_query($start = "SELECT * FROM ") {
+	private function _get_query($start = "") {
 		$clauses = "";
 		$count = 0;
-		foreach ($this->_query as $name => $val) {
-			if ($count == 0)
-				$clauses .= " WHERE ";
-			if ($count > 1)
-				$clauses .= " AND ";
-			$clauses .= $name . "=" . $val;
-			$count++;
+		$selection = '*';
+		foreach ($this->_query as $clause => $criterion) {
+			$count = 0;
+			foreach ($criterion as $name => $val) {
+				if ($clause === "DEFER") {
+					if ($count == 0)
+						$selection = "($val";
+					else
+						$selection .= ", $val";
+				}
+				else {
+					if ($count == 0)
+						$clauses .= " $clause ";
+					if ($count > 1)
+						$clauses .= " AND ";
+					$clauses .= $name . "=" . $val;
+					$count++;
+				}
+			}
+			if ($clause === "DEFER")
+				$selection .= ")";
 		}
-		return $start . $this->_model->get_table_name() . "$clauses;";
+		if (strlen($start) == 0) {
+			$start = "SELECT $selection FROM";
+		}
+		return $start . " " . $this->_model->get_table_name() . "$clauses;";
 	}
 	
 	/* Run this query */
@@ -79,7 +96,7 @@ class ModelQuery
 		if ($this->_has_run)
 			return $this->_count;
 		$db = Database::create();
-		$query = $db->query($this->_get_query("SELECT COUNT(*) FROM "));
+		$query = $db->query($this->_get_query("SELECT COUNT(*) FROM"));
 		$result = $db->fetch($query);
 		$this->_count = $result[0];
 		return $result[0];

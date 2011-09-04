@@ -3,8 +3,8 @@
  * Tikapot Model System
  *
  * Copyright 2011, AUTHORS.txt
- * Licensed under the GPL Version 3 license.
- * http://www.gnu.org/licenses/gpl-3.0.txt
+ * Licensed under the Keiouu v1.0 License.
+ * See LICENSE.txt
  */
 
 global $home_dir;
@@ -31,8 +31,9 @@ abstract class Model
 	
 	// Allows access to stored models
 	// Returns a modelquery object containing the elements
+	// $query should be in the following format: (COL => Val, COL => (OPER => Val), etc)
 	public function find($query) {
-		return new ModelQuery($this, $query);
+		return new ModelQuery($this, array("WHERE" => $query));
 	}
 	
 	// Allows access to stored models

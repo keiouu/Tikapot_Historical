@@ -1,0 +1,32 @@
+Keiouu License
+
+Tl;DR: Authors arent responsible for the software, if you use this in a project that project must be made open source, gotta show the license off
+
+----------------------------------------------------------------------------------------------
+
+Copyright (C) 2011 James Thompson <http://www.keiouu.com/>
+Everyone is permitted to copy and distribute verbatim copies
+of this license document, and changing it is allowed provided you rename the licence below and change version to "custom".
+
+Name of License: Keiouu License
+Version: 1.0
+
+The precise terms and conditions for: the use, copying, distribution and modification of this software follow.
+
+You may use this software providing:
+	1. You understand that the authors of this project are not responsible for any damages, loss, etc that may occur from the use of it.
+	2. Your software must be made open source and placed in the public domain, where "the public domain" is defined as an area that is both publicly accessible and searchable through a public search engine.
+	3. You may sell copies of this product, and modified versions of this project, as long as the purchaser is made aware that there is a free project avaliable.
+	4. A visible copy of this license is provided to users, customers, etc.
+	
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL ANY AUTHOR OR CONTRIBUTOR BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
