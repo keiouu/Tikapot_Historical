@@ -30,7 +30,7 @@ abstract class Model
 	}
 	
 	// Allows access to stored models
-	// Returns an array of objects matching the query
+	// Returns a modelquery object containing the elements
 	public function find($query) {
 		return new ModelQuery($this, $query);
 	}

@@ -14,13 +14,19 @@ class ModelQueryException extends Exception { }
 
 class ModelQuery
 {
-	private $_model, $_query, $_objects, $_count;
+	private $_model, $_query, $_objects, $_count, $_has_run;
 	
 	/* For now this only supports the WHERE clauses */
 	public function __construct($model, $query) {
+		$this->_has_run = False;
 		$this->_model = $model;
 		$this->_query = $query;
-		$this->_run(); // TODO - implement lazy evaluation
+	}
+	
+	/* Allows for lazy evaluation */
+	private function _ensure_run() {
+		if (!$this->_has_run)
+			$this->_run();
 	}
 	
 	private function _get_object_from_result($result) {
@@ -37,6 +43,7 @@ class ModelQuery
 		$this->_count = 0;
 		
 		// Build clauses
+		// TODO - implement more clauses
 		$clauses = "";
 		$count = 0;
 		foreach ($this->_query as $name => $val) {
@@ -55,15 +62,20 @@ class ModelQuery
 			array_push($this->_objects, $this->_get_object_from_result($result));
 			$this->_count++;
 		}
+		
+		$this->_has_run = True;
 	}
 	
 	/* Returns the number of objects in this query */
 	public function count() {
+		$this->_ensure_run();
 		return $this->_count;
 	}
 	
 	/* Returns the nth object in this query */
 	public function get($n) {
+		$this->_ensure_run();
+		
 		if ($this->count() < $n || $n < 0)
 			throw new ModelQueryException("Error in get(): $n is not a valid element in this query!");
 		return $this->_objects[$n];
@@ -71,6 +83,8 @@ class ModelQuery
 	
 	/* Returns all objects in this query optionally starting at the nth element */
 	public function all($n = 0) {
+		$this->_ensure_run();
+		
 		if ($n == 0)
 			return $this->_objects;
 		$objects = array();
