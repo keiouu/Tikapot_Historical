@@ -18,6 +18,12 @@ class NumericField extends ModelField
 			parent::__construct($default, $_extra);
 			$this->precision = $precision;
 	}
+	
+	public function sql_value($db) {
+		if (strlen($this->value) <= 0)
+			return "0";
+		return $this->value;
+	}
 
 	public function validate() {
 		if (strlen($this->precision) > 0) {

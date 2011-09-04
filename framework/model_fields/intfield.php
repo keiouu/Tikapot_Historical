@@ -20,6 +20,12 @@ class IntField extends ModelField
 			$this->auto_increment = $auto_increment;
 			$this->hide_from_query = $auto_increment;
 	}
+	
+	public function sql_value($db) {
+		if (strlen($this->value) <= 0)
+			return "0";
+		return $this->value;
+	}
 
 	public function validate() {
 		if (strlen($this->value) > 0 && !is_int($this->value)) {

@@ -18,6 +18,10 @@ abstract class ModelField
 			$this->value = $this->default_value;
 			$this->_extra = $_extra;
 	}
+	
+	public function sql_value($db) {
+		return $this->value;
+	}
 
 	public function get_default() {
 		return $this->default_value;
@@ -43,11 +47,6 @@ abstract class ModelField
 	/* This allows subclasses to provide extra, separate queries on createdb such as sequences. These are put after the create table query. */
 	public function db_extra_create_query_post($db, $name, $table_name) {
 		return "";
-	}
-	
-	/* This allows subclasses to over-write table insert if desired */
-	public function db_insert_query($db) {
-		return $this->value;
 	}
 }
 

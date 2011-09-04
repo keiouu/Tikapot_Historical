@@ -194,7 +194,7 @@ abstract class Model
 				$values .= ", ";
 			}
 			$keys .= $field_name;
-			$val = $field->db_insert_query($db);
+			$val = $field->sql_value($db);
 			if (strlen($val) <= 0)
 				$val = "''";
 			$values .= $val;
@@ -207,8 +207,20 @@ abstract class Model
 	
 	// Insert the object to the database
 	public function update_query($db) {
-		$old_object = self::get($this->pk());
-		// TODO: complete
+		$old_object = static::get($this->pk());
+		$query = "UPDATE " . $this->get_table_name() . " SET ";
+		$go = False;
+		foreach ($old_object->get_fields() as $name => $field) {
+			$new_val = $this->fields[$name];
+			if ($field->value !== $new_val->value) {
+				$query .= $name . "=" . $new_val->sql_value($db);
+				$go = True;
+			}
+		}
+		$query .= " WHERE " . $this->_pk() . "=" . $this->pk;
+		if ($go)
+			return $db->query($query);
+		return True; // Nothing to do
 	}
 	
 	// Saves the object to the database, returns ID
