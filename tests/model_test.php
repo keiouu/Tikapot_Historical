@@ -29,7 +29,10 @@ class ModelTest extends UnitTestCase {
 		$obj->other_prop = 1.0;
 		$id = $obj->save();
 		$this->assertTrue($id > 0);
-		$this->assertEqual($obj->get($id)->test_prop, $obj->test_prop);
+		$this->assertEqual(TestModel::get($id)->test_prop, $obj->test_prop);
+		$obj->test_prop = "Bye!";
+		$obj->save();
+		$this->assertEqual(TestModel::get($id)->test_prop, "Bye!");
 	}
 	
 	function testModelDB() {

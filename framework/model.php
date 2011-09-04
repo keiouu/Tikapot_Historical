@@ -12,6 +12,8 @@ require_once($home_dir . "framework/database.php");
 require_once($home_dir . "framework/model_query.php");
 require_once($home_dir . "framework/model_fields/init.php");
 
+class ValidationException extends Exception { }
+
 abstract class Model
 {
 	private $from_db = False;
@@ -182,6 +184,16 @@ abstract class Model
 		return $this->errors;
 	}
 	
+	public function get_error_string() {
+		$str = "";
+		foreach ($this->get_errors() as $error) {
+			if (strlen($str) > 0)
+				$str .= "\n";
+			$str .= $error;
+		}
+		return $str;
+	}
+	
 	// Insert the object to the database
 	public function insert_query($db) {
 		$keys = "";
@@ -207,12 +219,14 @@ abstract class Model
 	
 	// Insert the object to the database
 	public function update_query($db) {
-		$old_object = static::get($this->pk());
+		$old_object = static::get($this->pk);
 		$query = "UPDATE " . $this->get_table_name() . " SET ";
 		$go = False;
 		foreach ($old_object->get_fields() as $name => $field) {
 			$new_val = $this->fields[$name];
 			if ($field->value !== $new_val->value) {
+				if ($go)
+					$query .= ", ";
 				$query .= $name . "=" . $new_val->sql_value($db);
 				$go = True;
 			}
@@ -225,8 +239,10 @@ abstract class Model
 	
 	// Saves the object to the database, returns ID
 	public function save() {
-		if (!$this->validate())
+		if (!$this->validate()) {
+			throw new ValidationException("Error in save(): model did not validate! " . $this->get_error_string());
 			return False;
+		}
 		$this->create_table();
 		$db = Database::create();
 		$query = "";
@@ -239,7 +255,7 @@ abstract class Model
 			}
 			if ($db->get_type() == "mysql")
 				$id = mysql_insert_id();
-			$this->pk = $id;
+			$this->pk = intval($id);
 			$this->from_db = True;
 		}
 		else {
