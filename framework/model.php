@@ -38,14 +38,14 @@ abstract class Model
 	// Returns a modelquery object containing the elements
 	// $query should be in the following format: (COL => Val, COL => (OPER => Val), etc)
 	public static function find($query) {
-		return new ModelQuery($this, array("WHERE" => $query));
+		return new ModelQuery(new static(), array("WHERE" => $query));
 	}
 	
 	// Allows access to stored models
 	// Returns a single object
 	// Errors if multiple objects are found or no objects are found
 	public static function get($id = 0) {
-		$results = self::find(array("id" => $id));
+		$results = static::find(array("id" => $id));
 		if ($results->count() == 0)
 			throw new ModelQueryException("No objects matching query exist");
 		if ($results->count() > 1)
@@ -207,6 +207,7 @@ abstract class Model
 	
 	// Insert the object to the database
 	public function update_query($db) {
+		$old_object = self::get($this->pk());
 		// TODO: complete
 	}
 	
@@ -226,13 +227,13 @@ abstract class Model
 			}
 			if ($db->get_type() == "mysql")
 				$id = mysql_insert_id();
-			$this->pk() = $id;
+			$this->pk = $id;
 			$this->from_db = True;
 		}
 		else {
 			$query = $db->query($this->update_query($db));
 		}
-		return $this->pk();
+		return $this->pk;
 	}
 }
 
