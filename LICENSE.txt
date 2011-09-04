@@ -16,7 +16,7 @@ The precise terms and conditions for: the use, copying, distribution and modific
 You may use this software providing:
 	1. You understand that the authors of this project are not responsible for any damages, loss, etc that may occur from the use of it.
 	2. Your software must be made open source and placed in the public domain, where "the public domain" is defined as an area that is both publicly accessible and searchable through a public search engine.
-	3. You may sell copies of this product, and modified versions of this project, as long as the purchaser is made aware that there is a free project avaliable.
+	3. You may sell copies of this product, and modified versions of this project, as long as the purchaser is made aware that there is a free project avaliable and you have gained permission from James Thompson <keiouu@gmail.com>.
 	4. A visible copy of this license is provided to users, customers, etc.
 	
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
