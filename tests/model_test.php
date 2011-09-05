@@ -25,6 +25,7 @@ class ModelTest extends UnitTestCase {
 	function testModelManager() {
 		$db = Database::create();
 		$obj = new TestModel();
+		$db->query("DELETE FROM " . $obj->get_table_name() . ";");
 		$obj->test_prop = "Hello";
 		$obj->other_prop = 1.0;
 		$id = $obj->save();
@@ -33,6 +34,11 @@ class ModelTest extends UnitTestCase {
 		$obj->test_prop = "Bye!";
 		$obj->save();
 		$this->assertEqual(TestModel::get($id)->test_prop, "Bye!");
+		$obj->test_prop = "Hi!";
+		$obj->other_prop = 2.0;
+		$obj->save();
+		$this->assertEqual(TestModel::get($id)->test_prop, "Hi!");
+		$this->assertEqual(TestModel::get($id)->other_prop, 2.0);
 	}
 	
 	function testModelDB() {

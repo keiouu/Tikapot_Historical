@@ -224,7 +224,7 @@ abstract class Model
 		$go = False;
 		foreach ($old_object->get_fields() as $name => $field) {
 			$new_val = $this->fields[$name];
-			if ($field->value !== $new_val->value) {
+			if (strval($field->value) !== strval($new_val->value)) {
 				if ($go)
 					$query .= ", ";
 				$query .= $name . "=" . $new_val->sql_value($db);
