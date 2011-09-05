@@ -10,7 +10,7 @@
 /* Basically looks prettier than full caps arrays everywhere, utility functions can be put here */
 class Request
 {	 
-	public $method, $get, $post, $cookies;
+	public $method, $page, $get, $post, $cookies;
 	
 	public function __construct() {
 		// Constructs a Request object out of what we know
@@ -20,6 +20,13 @@ class Request
 		$this->get = $_GET;
 		$this->post = $_POST;
 		$this->cookies = $_COOKIE;
+		$this->page = "/";
+		if (isset($this->get['page'])) {
+			$this->page = $this->get['page'];
+			// Ensure the page has a trailing slash
+			if ($this->page[strlen($this->page)-1] !== '/')
+				$this->page .= '/';
+		}
 	}
 }
 

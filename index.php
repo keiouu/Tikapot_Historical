@@ -18,6 +18,7 @@ include("framework/request.php");
 
 $view_manager = new ViewManager();
 load_applications();
-$view_manager->get("/")->render(new Request());
+$request = new Request();
+$view_manager->get($request->page)->render($request);
 ?>
 

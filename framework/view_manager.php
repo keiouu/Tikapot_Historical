@@ -16,7 +16,7 @@ class ViewManager
 	}
 	
 	public function add($view) {
-		$this->views[$view->url] = $view;
+		$this->views[$view->get_url()] = $view;
 	}
 	
 	public function get($url) {
