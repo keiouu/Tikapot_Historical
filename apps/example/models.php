@@ -8,8 +8,8 @@
  */
  
 global $home_dir;
-require($home_dir . "framework/model.php");
-require($home_dir . "framework/model_fields/init.php");
+require_once($home_dir . "framework/model.php");
+require_once($home_dir . "framework/model_fields/init.php");
 
 class ExampleModel extends Model
 {	

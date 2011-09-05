@@ -14,9 +14,11 @@ class View
 	 * A view links a URL to a php function
 	 * This php function renders a page
 	 */
-	protected $url = "";
-	public function __construct($url) {
+	protected $url, $page;
+	public function __construct($url, $page = "") {
 		$this->set_url($url);
+		$this->page = $page;
+		
 		global $view_manager;
 		$view_manager->add($this);
 	}
@@ -35,8 +37,9 @@ class View
 		return $this->url;
 	}
 	 
-	/* Request is a 'Request' object. */
+	/* Request is a 'Request' object. By default this simply includes $this->page be sure to override for more complex things! */
 	public function render($request) {
+		include($this->page);
 	}
 }
 
