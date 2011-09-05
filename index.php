@@ -11,15 +11,13 @@ ini_set('display_errors', '1');
 
 $home_dir = dirname(__FILE__) . '/';
 
-include("framework/view_manager.php");
-$view_manager = new ViewManager();
-
 require("config.php");
-include("tests/init.php");
-
-// TODO - app loader
-include("apps/example/init.php");
+include("framework/view_manager.php");
+require("framework/app_loader.php");
 include("framework/request.php");
+
+$view_manager = new ViewManager();
+load_applications();
 $view_manager->get("/")->render(new Request());
 ?>
 

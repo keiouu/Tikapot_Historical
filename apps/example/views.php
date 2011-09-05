@@ -21,5 +21,18 @@ class IndexView extends View
 		print "Welcome to the example app!";
 	}
 }
+
+class TestView extends View
+{
+	public function __construct() {
+		parent::__construct("/test/");
+	}
+	 
+	/* Request is a 'Request' object. */
+	public function render($request) {
+		global $home_dir;
+		include($home_dir . "tests/init.php");
+	}
+}
 ?>
 

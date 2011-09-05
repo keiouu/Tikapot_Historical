@@ -13,5 +13,6 @@ require($home_dir . "apps/example/views.php");
 
 // Load views
 new IndexView();
+new TestView();
 ?>
 
