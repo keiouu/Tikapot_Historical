@@ -1,6 +1,6 @@
 <?php
 /*
- * Tikapot Example Models
+ * Tikapot Example App Models
  *
  * Copyright 2011, AUTHORS.txt
  * Licensed under the GNU General Public License version 3.
@@ -9,7 +9,7 @@
  
 global $home_dir;
 require($home_dir . "framework/model.php");
-require($home_dir . "framework/modelfields.php");
+require($home_dir . "framework/model_fields/init.php");
 
 class ExampleModel extends Model
 {	
