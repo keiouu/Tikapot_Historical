@@ -1,17 +1,15 @@
-Tikapot is a pot of simple, easy-to-understand PHP libraries to reduce development time.
+Tikapot is a simple PHP MVC framework
 
-Current Library List:
+Contrib List:
 1. Timer Class
-2. Database Layer
-3. Session Layer
-4. Model Architecture
+2. Session Layer
 
 
 #Examples
 
 ##Timer
 ```php
-require("framework/timer.php");
+require("contrib/timer.php");
 $timer = Timer::start();
 for ($i=0; $i<=100000; $i++){}
 $time = $timer->ping();
@@ -23,7 +21,7 @@ print("Time for 1,000,000 iterations: $time seconds");
 
 ##Session
 ```php
-require("framework/session.php");
+require("contrib/session.php");
 Session::store("Test", 2);
 Session::get("Test"); // Returns 2
 Session::remove("Test");
@@ -51,9 +49,15 @@ require("framework/modelfields.php");
 
 class ExampleModel extends Model
 {
-	private $_first_name = new CharField();
-	private $_last_name = new CharField();
-	private $_age = new NumericField();
+	public function __construct() {
+		parent::__construct();
+		$this->add_field("first_name", new CharField());
+		$this->add_field("last_name", new CharField());
+		$this->add_field("age", new NumericField());
+	}
 }
+$obj = ExampleModel()
+$obj->first_name = "John";
+$obj->save();
 ```
 

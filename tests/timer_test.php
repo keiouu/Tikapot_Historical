@@ -9,7 +9,7 @@
  
 global $home_dir;
 require_once($home_dir . "lib/simpletest/autorun.php");
-require_once($home_dir . "framework/timer.php");
+require_once($home_dir . "contrib/timer.php");
 
 
 class TimerTest extends UnitTestCase {
