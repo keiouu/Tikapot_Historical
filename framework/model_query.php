@@ -1,6 +1,6 @@
 <?php
 /*
- * Tikapot Model System
+ * Tikapot Model Query System
  *
  * Copyright 2011, AUTHORS.txt
  * Licensed under the GNU General Public License version 3.
