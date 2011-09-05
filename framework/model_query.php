@@ -20,12 +20,11 @@ class ModelQuery
 	/* $query should conform to the following structure (each line optional):
 	 *  (
 	 *    WHERE => (COL => Val, COL => (Val, OPER), etc),   Default: =
-	 *    ORDER_BY => (COL, (COL, DESC/ASC), etc),          Default: DESC
+	 *    ORDER_BY => (COL, (COL, DESC/ASC), etc),          Default: ASC
 	 *    ONLY => (COL, COL, etc),
 	 *  )
-	 *  TODO: more clauses
 	 */
-	public function __construct($model, $query) {
+	public function __construct($model, $query = array()) {
 		$this->_has_run = False;
 		$this->_model = $model;
 		$this->_query = $query;
@@ -45,7 +44,7 @@ class ModelQuery
 	}
 	
 	private function _build_query($start = "") {
-		$clauses = "";
+		$query = "";
 		$count = 0;
 		$selection = '*';
 		foreach ($this->_query as $clause => $criterion) {
@@ -56,30 +55,29 @@ class ModelQuery
 						$selection = "($val";
 					else
 						$selection .= ", $val";
-				}
-				else {
+				} else {
 					if ($count == 0)
-						$clauses .= " $clause ";
-					if ($count > 1)
-						$clauses .= " AND ";
-					$clauses .= $name;
-					$op = "";
-					if ($clause === "WHERE")
-						$op = "=";
-					if ($clause === "ORDER_BY")
-						$op = ", ";
-					if (is_array($val)) {
-						$op = $val[1];
-						$val = $val[0];
-					}
-					if ($clause === "WHERE")
-						$clauses .= $op . $val;
-					if ($clause === "ORDER_BY" && $count == 0)
-						$clauses .= $val . $op;
-					if ($clause === "ORDER_BY" && $count > 0)
-						$clauses .= ", " . $val . $op;
-					$count++;
+						$query .= " $clause ";
 				}
+				
+				if ($clause === "WHERE") {
+					if ($count > 1)
+						$query .= " AND "; # TODO - implement OR etc
+					$query .= $name;
+					if (is_array($val))
+						$query .= $val[0] . $val[1];
+					else
+						$query .= "=" . $val;
+				}
+				
+				if ($clause === "ORDER BY") {
+					if (is_array($val))
+						$query .= $val[0] . " " . $val[1];
+					else
+						$query .= $val . " ASC";
+				}
+				
+				$count++;
 			}
 			if ($clause === "ONLY")
 				$selection .= ")";
@@ -87,7 +85,7 @@ class ModelQuery
 		if (strlen($start) == 0) {
 			$start = "SELECT $selection FROM";
 		}
-		return $start . " " . $this->_model->get_table_name() . "$clauses;";
+		return $start . " " . $this->_model->get_table_name() . "$query;"; // TODO - cache query
 	}
 	
 	/* Run this query */
@@ -139,9 +137,14 @@ class ModelQuery
 		return $objects;
 	}
 	
-	/* Orders elements by <col> */
-	public function order_by($col) {
-		
+	/* Orders elements by (COL, (COL, DESC/ASC), etc) */
+	public function order_by($query) {
+		$new_query = $this->_query;
+		if (is_array($query) && (count($query) != 2 || ($query[1] !== "ASC" && $query[1] !== "DESC")))
+			$new_query["ORDER BY"] = $query;
+		else
+			$new_query["ORDER BY"] = array($query);
+		return new static($this->_model, $new_query);
 	}
 }
 

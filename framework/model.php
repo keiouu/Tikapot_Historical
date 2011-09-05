@@ -37,6 +37,12 @@ abstract class Model
 	}
 	
 	// Allows access to stored models
+	// Returns all objects
+	public static function all() {
+		return new ModelQuery(new static());
+	}
+	
+	// Allows access to stored models
 	// Returns a modelquery object containing the elements
 	// $query should be in the following format: (COL => Val, COL => (OPER => Val), etc)
 	public static function find($query) {
