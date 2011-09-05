@@ -15,7 +15,7 @@ class ModelQueryException extends Exception { }
 /* TODO: enable models to override modelquery, having custom managers */
 class ModelQuery
 {
-	private $_model, $_query, $_objects, $_count, $_has_run;
+	private $_model, $_query, $_objects, $_count, $_has_run, $_built_queries;
 	
 	/* $query should conform to the following structure (each line optional):
 	 *  (
@@ -28,6 +28,7 @@ class ModelQuery
 		$this->_has_run = False;
 		$this->_model = $model;
 		$this->_query = $query;
+		$this->_built_queries = array();
 	}
 	
 	/* Allows for lazy evaluation */
@@ -43,10 +44,9 @@ class ModelQuery
 		return $obj;
 	}
 	
-	private function _build_query($start = "") {
+	private function _build_query($selection = "*") {
 		$query = "";
 		$count = 0;
-		$selection = '*';
 		foreach ($this->_query as $clause => $criterion) {
 			$count = 0;
 			foreach ($criterion as $name => $val) {
@@ -82,10 +82,13 @@ class ModelQuery
 			if ($clause === "ONLY")
 				$selection .= ")";
 		}
-		if (strlen($start) == 0) {
-			$start = "SELECT $selection FROM";
-		}
-		return $start . " " . $this->_model->get_table_name() . "$query;"; // TODO - cache query
+		$this->_built_queries[$selection] = "SELECT $selection FROM " . $this->_model->get_table_name() . "$query;";
+	}
+	
+	private function _get_query($selection = "*") {
+		if (!isset($this->_built_queries[$selection]))
+			$this->_build_query($selection);
+		return $this->_built_queries[$selection];
 	}
 	
 	/* Run this query */
@@ -96,7 +99,7 @@ class ModelQuery
 		
 		// Get objects
 		$db = Database::create();
-		$query = $db->query($this->_build_query());
+		$query = $db->query($this->_get_query());
 		while($result = $db->fetch($query)) {
 			array_push($this->_objects, $this->_get_object_from_result($result));
 			$this->_count++;
@@ -110,7 +113,7 @@ class ModelQuery
 		if ($this->_has_run)
 			return $this->_count;
 		$db = Database::create();
-		$query = $db->query($this->_build_query("SELECT COUNT(*) FROM"));
+		$query = $db->query($this->_get_query("COUNT(*)"));
 		$result = $db->fetch($query);
 		$this->_count = $result[0];
 		return $result[0];
