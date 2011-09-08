@@ -18,8 +18,7 @@ class TimerTest extends UnitTestCase {
 		$this->assertTrue($timer);
 		$pingtime = $timer->ping();
 		$this->assertTrue($timer->ping() > 0);
-		for ($i=0; $i > 100; $i++){} // Time passes..
-		$endtime = $timer->end();
+		$endtime = $timer->stop();
 		$this->assertTrue($endtime > $pingtime);
 		for ($i=0; $i > 100; $i++){} // Time passes..
 		$this->assertEqual($endtime, $timer->ping());

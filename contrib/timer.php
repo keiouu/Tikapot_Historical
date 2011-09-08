@@ -30,8 +30,8 @@ class Timer
 		return microtime(True) - $this->start_time;
 	}
 	
-	/* Returns the current time on the timer, ending it casuing future calls to ping() to return the time at the point of the end() call. */
-	public function end() {
+	/* Returns the current time on the timer, ending it causing future calls to ping() to return the time at the point of the stop() call. */
+	public function stop() {
 		$this->end_time = $this->ping();
 		return $this->end_time;
 	}

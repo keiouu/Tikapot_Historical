@@ -6,6 +6,9 @@
  * Licensed under the GNU General Public License version 3.
  * See LICENSE.txt
  */
+
+require_once("contrib/timer.php");
+$pageloadtimer = Timer::start();
  
 ini_set('display_errors', '1');
 
@@ -18,7 +21,8 @@ require_once("framework/request.php");
 
 $view_manager = new ViewManager();
 load_applications();
-$request = new Request();
+$request = new Request($pageloadtimer);
 $view_manager->get($request->page)->render($request);
+
 ?>
 
