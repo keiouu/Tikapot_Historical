@@ -9,9 +9,15 @@
  */
  
 function load_applications() {
-	global $apps_list, $home_dir;
+	global $app_paths, $apps_list, $home_dir;
 	foreach ($apps_list as $app) {
-		include($home_dir . "apps/" . $app . "/init.php");
+		foreach ($app_paths as $app_path) {
+			$filename = $home_dir . $app_path . "/" . $app . "/init.php";
+			if (file_exists($filename)) {
+				include($filename);
+				break;
+			}
+		}
 	}
 }
 ?>
