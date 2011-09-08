@@ -229,7 +229,7 @@ abstract class Model
 		}
 		$extra = "";
 		if ($db->get_type() == "psql")
-			$extra = " RETURNING id";
+			$extra = " RETURNING " . $this->_pk();
 		return "INSERT INTO " . $this->get_table_name() . " (" . $keys . ") VALUES (" . $values . ")" . $extra . ";";
 	}
 	
