@@ -13,9 +13,9 @@ require_once($home_dir . "framework/database.php");
 class ModelQueryException extends Exception { }
 
 /* TODO: enable models to override modelquery, having custom managers */
-class ModelQuery
+class ModelQuery implements Iterator, Countable
 {
-	private $_model, $_query, $_objects, $_count, $_has_run, $_built_queries;
+	private $_model, $_query, $_objects, $_count, $_has_run, $_built_queries, $_position;
 	
 	/* $query should conform to the following structure (each line optional):
 	 *  (
@@ -25,6 +25,7 @@ class ModelQuery
 	 *  )
 	 */
 	public function __construct($model, $query = array()) {
+		$this->_position = 0;
 		$this->_has_run = False;
 		$this->_model = $model;
 		$this->_query = $query;
@@ -149,6 +150,20 @@ class ModelQuery
 			$new_query["ORDER BY"] = array($query);
 		return new static($this->_model, $new_query);
 	}
+
+	/* Iterator stuff */
+	public function rewind() { $this->_position = 0; }
+	public function current() {
+		$this->_ensure_run();
+		return $this->_objects[$this->_position];
+	}
+	public function key() { return $this->_position; }
+	public function next() { ++$this->_position; }
+	public function valid() {
+		$this->_ensure_run();
+		return isset($this->_objects[$this->_position]);
+	}
+	/* End of Iterator stuff */
 }
 
 ?>
