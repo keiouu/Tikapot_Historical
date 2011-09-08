@@ -25,7 +25,11 @@ abstract class Model
 	}
 	
 	/* Allows custom primary keys */
-	protected function _pk() { return "id"; }
+	protected function _pk() {
+		foreach ($this->fields as $name => $field)
+			if (strtolower(get_class($field)) === "pkfield")
+				return $name;
+	}
 	
 	/* Load field values from query result */
 	public function load_query_values($result) {
