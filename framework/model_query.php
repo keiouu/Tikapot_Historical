@@ -12,7 +12,6 @@ require_once($home_dir . "framework/database.php");
 
 class ModelQueryException extends Exception { }
 
-/* TODO: enable models to override modelquery, having custom managers */
 class ModelQuery implements Iterator, Countable
 {
 	private $_model, $_query, $_objects, $_count, $_has_run, $_built_queries, $_position;
@@ -38,14 +37,15 @@ class ModelQuery implements Iterator, Countable
 			$this->_run();
 	}
 	
-	private function _get_object_from_result($result) {
+	protected function _get_object_from_result($result) {
 		$reflector = new ReflectionClass(get_class($this->_model));
 		$obj = $reflector->newInstance();
 		$obj->load_query_values($result);
 		return $obj;
 	}
 	
-	private function _build_query($selection = "*") {
+	/* Returns the built query */
+	protected function _build_query($selection = "*") {
 		$query = "";
 		$count = 0;
 		foreach ($this->_query as $clause => $criterion) {
@@ -84,11 +84,12 @@ class ModelQuery implements Iterator, Countable
 				$selection .= ")";
 		}
 		$this->_built_queries[$selection] = "SELECT $selection FROM " . $this->_model->get_table_name() . "$query;";
+		return $this->_built_queries[$selection];
 	}
 	
 	private function _get_query($selection = "*") {
 		if (!isset($this->_built_queries[$selection]))
-			$this->_build_query($selection);
+			$this->_built_queries[$selection] = $this->_build_query($selection);
 		return $this->_built_queries[$selection];
 	}
 	

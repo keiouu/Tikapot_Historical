@@ -24,6 +24,11 @@ abstract class Model
 		$this->add_field("id", new PKField(0, $max_length = 22, True));
 	}
 	
+	/* Allows custom model queries */
+	protected static function get_modelquery($query = array()) {
+		return new ModelQuery(new static(), $query);
+	}
+	
 	/* Allows custom primary keys */
 	protected function _pk() {
 		foreach ($this->fields as $name => $field)
@@ -41,14 +46,14 @@ abstract class Model
 	// Allows access to stored models
 	// Returns all objects
 	public static function all() {
-		return new ModelQuery(new static());
+		return static::get_modelquery();
 	}
 	
 	// Allows access to stored models
 	// Returns a modelquery object containing the elements
 	// $query should be in the following format: (COL => Val, COL => (OPER => Val), etc)
 	public static function find($query) {
-		return new ModelQuery(new static(), array("WHERE" => $query));
+		return static::get_modelquery(array("WHERE" => $query));
 	}
 	
 	// Allows access to stored models

@@ -10,6 +10,7 @@
 global $home_dir;
 require_once($home_dir . "lib/simpletest/autorun.php");
 require_once($home_dir . "framework/model.php");
+require_once($home_dir . "framework/model_query.php");
 require_once($home_dir . "framework/database.php");
 
 class TestModel extends Model
@@ -29,7 +30,31 @@ class TestModel2 extends Model
 	}
 }
 
+class CustomModelQuery extends ModelQuery
+{
+	public function count() {
+		return 50;
+	}
+}
+
+class TestModel3 extends Model
+{
+	public function __construct() {
+		parent::__construct();
+		$this->add_field("prop", new NumericField(4.5));
+	}
+	
+	protected static function get_modelquery($query = array()) {
+		return new CustomModelQuery(new static(), $query);
+	}
+}
+
 class ModelTest extends UnitTestCase {
+	function testModelManagerOverride() {
+		$obj = new TestModel3();
+		$this->assertEqual(count(TestModel3::all()), 50);
+	}
+	
 	function testModelManager() {
 		$db = Database::create();
 		$obj = new TestModel();
