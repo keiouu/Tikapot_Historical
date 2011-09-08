@@ -281,6 +281,18 @@ abstract class Model
 		}
 		return $this->pk;
 	}
+
+	public function delete_query($db) {
+		return "DELETE FROM " . $this->get_table_name() . " WHERE ". $this->_pk() ."='" . $this->pk . "';";
+	}
+
+	/* Returns True on success, False on failure */
+	public function delete() {
+		if (!$this->from_db)
+			return False;
+		$db = Database::create();
+		$db->query($this->delete_query($db));
+	}
 }
 
 ?>
