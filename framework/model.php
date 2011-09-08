@@ -22,8 +22,6 @@ abstract class Model
 	public function __construct() {
 		$this->table_name = $this->get_table_name();
 		$this->add_field("id", new PKField(0, $max_length = 22, True));
-		// TODO: validation check: only one pk field
-		// TODO: validation check: ensure pk field is first field
 	}
 	
 	/* Allows custom primary keys */
@@ -63,7 +61,16 @@ abstract class Model
 	
 	// Add a new field
 	protected function add_field($name, $type) {
-		$this->fields[$name] = $type;
+		if (strtolower(get_class($type)) === "pkfield") {
+			$new_fields = array();
+			$new_fields[$name] = $type;
+			foreach ($this->fields as $name => $field)
+				if (strtolower(get_class($field)) !== "pkfield")
+					$new_fields[$name] = $field;
+			$this->fields = $new_fields;
+		} else {
+			$this->fields[$name] = $type;
+		}
 	}
 	
 	public function get_table_name() {

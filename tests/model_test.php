@@ -21,6 +21,14 @@ class TestModel extends Model
 	}
 }
 
+class TestModel2 extends Model
+{
+	public function __construct() {
+		parent::__construct();
+		$this->add_field("test_pk", new PKField(0, $max_length=7, True));
+	}
+}
+
 class ModelTest extends UnitTestCase {
 	function testModelManager() {
 		$db = Database::create();
@@ -83,7 +91,6 @@ class ModelTest extends UnitTestCase {
 		$this->assertEqual($test_field->db_create_query($db, "test_field", "testmodel"), "test_field INT DEFAULT '0'");
 		$test_field = new BigIntField();
 		$this->assertEqual($test_field->db_create_query($db, "test_field", "testmodel"), "test_field BIGINT DEFAULT '0'");
-		// TODO - test DB validation when its coded
 	}
 	
 	function testModels() {
@@ -110,9 +117,8 @@ class ModelTest extends UnitTestCase {
 	}
 	
 	function testModelFields() {
-		$obj = new TestModel();
-
 		// Test validation
+		$obj = new TestModel();
 		$obj->test_prop = '123456789';
 		$this->assertFalse($obj->validate());
 		$this->assertTrue(count($obj->get_errors()) > 0);
@@ -121,6 +127,14 @@ class ModelTest extends UnitTestCase {
 		$this->assertTrue(count($obj->get_errors()) == 0);
 		$obj->test_prop = '123456';
 		$this->assertTrue($obj->validate());
+	}
+	
+	function testModelException() {
+		// Test one pk field rule
+		$obj = new TestModel2();
+		$this->expectException();
+		$obj->id;
+		// DO NOT ADD TESTS BELOW THIS LINE
 	}
 }
 

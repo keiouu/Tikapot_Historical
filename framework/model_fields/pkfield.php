@@ -1,6 +1,6 @@
 <?php
 /*
- * Tikapot Big Integer Field
+ * Tikapot Primary Key Field
  *
  * Copyright 2011, AUTHORS.txt
  * Licensed under the GNU General Public License version 3.
