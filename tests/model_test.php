@@ -53,9 +53,12 @@ class ModelTest extends UnitTestCase {
 		$obj1->save();
 		$obj2 = new TestModel();
 		$obj2->other_prop = 9.0;
-		$obj2->save();
+		$obj2id = $obj2->save();
 		$this->assertEqual(TestModel::all()->order_by("other_prop")->get(0)->other_prop, 2.0);
 		$this->assertEqual(TestModel::all()->order_by(array("other_prop", "DESC"))->get(0)->other_prop, 9.0);
+		$this->assertEqual(count(TestModel::find(array("id"=>$obj2id))->all()), 1);
+		$obj2->delete();
+		$this->assertEqual(count(TestModel::find(array("id"=>$obj2id))->all()), 0);
 	}
 	
 	function testModelDB() {
