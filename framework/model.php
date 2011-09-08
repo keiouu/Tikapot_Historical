@@ -153,7 +153,6 @@ abstract class Model
 	}
 	
 	// Creates the table in the database if needed
-	// Returns True on success, even if it didnt have to do anything
 	public function create_table() {
 		$db = Database::create();
 		$table_name = $this->get_table_name();

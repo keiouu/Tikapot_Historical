@@ -25,6 +25,7 @@ class ModelTest extends UnitTestCase {
 	function testModelManager() {
 		$db = Database::create();
 		$obj = new TestModel();
+		$obj->create_table(); // This is here to prevent the query below failing if no table exists yet
 		$db->query("DELETE FROM " . $obj->get_table_name() . ";");
 		$obj->test_prop = "Hello";
 		$obj->other_prop = 1.0;
