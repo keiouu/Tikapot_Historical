@@ -7,12 +7,11 @@
  * See LICENSE.txt
  */
 
-require_once("contrib/timer.php");
-$pageloadtimer = Timer::start();
- 
 ini_set('display_errors', '1');
 
 $home_dir = dirname(__FILE__) . '/';
+require_once($home_dir . "contrib/timer.php");
+$pageloadtimer = Timer::start();
 require_once($home_dir . "config.php");
 require_once($home_dir . "framework/view_manager.php");
 require_once($home_dir . "framework/app_loader.php");
