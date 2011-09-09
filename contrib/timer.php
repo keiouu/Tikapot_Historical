@@ -13,15 +13,23 @@ class Timer
 	private static $current_uid = 0;
 	private $uid = 0, $start_time = 0, $end_time = 0;
 	
-	private function __construct() {
+	private function __construct($microtime = NULL) {
 		$this->uid = self::$current_uid;
-		$this->start_time = microtime(True);
+		if ($microtime != NULL)
+			$this->start_time = $microtime;
+		else
+			$this->start_time = microtime(True);
 		self::$current_uid++;
 	}
 	
 	/* Starts a new timer and returns it */
 	public static function start() {
 		return new Timer();
+	}
+	
+	/* Starts a new timer with a base time and returns it */
+	public static function startAt($microtime) {
+		return new Timer($microtime);
 	}
 	
 	/* Returns the current time on the timer without ending it */
