@@ -101,6 +101,7 @@ class ModelQuery implements Iterator, Countable
 		
 		// Get objects
 		$db = Database::create();
+		$this->_model->create_table();
 		$query = $db->query($this->_get_query());
 		while($result = $db->fetch($query)) {
 			array_push($this->_objects, $this->_get_object_from_result($result));

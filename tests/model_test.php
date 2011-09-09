@@ -50,6 +50,11 @@ class TestModel3 extends Model
 }
 
 class ModelTest extends UnitTestCase {
+	function testModelTableValidation() {
+		$obj = new TestModel3();
+		$this->assertTrue($obj->verify_table());
+	}
+
 	function testModelManagerOverride() {
 		$obj = new TestModel3();
 		$this->assertEqual(count(TestModel3::all()), 50);

@@ -13,6 +13,7 @@ require_once($home_dir . "framework/model_query.php");
 require_once($home_dir . "framework/model_fields/init.php");
 
 class ValidationException extends Exception { }
+class TableValidationException extends ValidationException { }
 
 abstract class Model
 {
@@ -184,8 +185,22 @@ abstract class Model
 	}
 	
 	// Verifies that the table structure in the database is up-to-date
+	// NOTE: Currently only detects field name changes, not type changes
 	public function verify_table() {
-		// TODO: complete
+		$this->create_table();
+		$db = Database::create();
+		$table_name = $this->get_table_name();
+		$fields = $this->get_fields();
+		$columns = $db->get_columns($this->get_table_name());
+		foreach ($columns as $column => $type) {
+			if (!array_key_exists($column, $fields))
+				throw new TableValidationException($column . " is no longer a part of " . $table_name);
+		}
+		foreach ($fields as $field => $type) {
+			if (!array_key_exists($field, $columns))
+				throw new TableValidationException($field . " should be in " . $table_name);
+		}
+		return True;
 	}
 	
 	// Validates the model
