@@ -32,7 +32,10 @@ abstract class ModelField
 	}
 	
 	public abstract function validate();
-	public abstract function db_create_query($db, $name, $table_name);
+
+	public function db_create_query($db, $name, $table_name) {
+		return $name . " " . static::$db_type;
+	}
 	
 	/* This allows subclasses to provide end-of-statement additions such as constraints */
 	public function db_post_create_query($db, $name, $table_name) {

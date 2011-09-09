@@ -68,6 +68,13 @@ abstract class Model
 			throw new ModelQueryException("Multiple objects matching query exist in get()");
 		return $results->get(0);
 	}
+
+	// Allows access to stored models
+	// Returns a single object (creates it if needed)
+	// Should have multiple arguments possible
+	public static function get_or_create($id = 0) {
+		// TODO
+	}
 	
 	// Add a new field
 	protected function add_field($name, $type) {

@@ -14,6 +14,9 @@ include_once("intfield.php");
 include_once("bigintfield.php");
 include_once("numericfield.php");
 include_once("pkfield.php");
+include_once("booleanfield.php");
+include_once("datefield.php");
+include_once("datetimefield.php");
 
 ?>
 
