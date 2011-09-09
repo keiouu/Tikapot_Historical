@@ -3,6 +3,8 @@ Tikapot is a simple PHP MVC framework
 Contrib List:
 1. Timer Class
 2. Session Layer
+3. Admin Portal
+4. Developer Portal
 
 
 #Examples
@@ -15,7 +17,7 @@ for ($i=0; $i<=100000; $i++){}
 $time = $timer->ping();
 print("Time for 100,000 iterations: $time seconds");
 for ($i=0; $i<=1000000; $i++){}
-$time = $timer->end();
+$time = $timer->stop();
 print("Time for 1,000,000 iterations: $time seconds");
 ```
 

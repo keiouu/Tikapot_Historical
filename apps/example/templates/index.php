@@ -12,9 +12,15 @@ include("header.php");
 ?>
 
 <h1>Welcome to Tikapot!</h1>
-<a href="/test/">Run Tests</a>
+<ul>
+<li><a href="/test/">Run Tests</a></li>
+<li><a href="/admin/">Admin Portal</a></li>
+<li><a href="/dev/">Dev Portal</a></li>
+</ul>
 
 <?php
+if ($request->get_page_load_time() !== False)
+	print "<p>Page loaded in: " . $request->get_page_load_time() . " seconds</p>";
 include("footer.php");
 ?>
 

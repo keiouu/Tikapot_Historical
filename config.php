@@ -13,7 +13,8 @@ $database_name = "tikapot";
 $database_username = "tikapot";
 $database_password = "tikapot";
 
-$apps_list = array("example");
+$app_paths = array("apps", "contrib");
+$apps_list = array("admin", "example", "development");
 
 ?>
 
