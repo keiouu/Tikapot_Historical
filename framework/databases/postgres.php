@@ -13,11 +13,14 @@ require_once($home_dir . "framework/database.php");
 
 class PostgreSQL extends Database
 {
+	private $_dbname;
+
 	protected function connect() {
 		global 	$database_host,
-				$database_name,
-				$database_username,
-				$database_password;
+					$database_name,
+					$database_username,
+					$database_password;
+		$this->_dbname = $database_name;
 		$this->_link = pg_connect("host=$database_host user=$database_username password=$database_password dbname=$database_name connect_timeout=5");
 		$this->_connected = isset($this->_link);
 		if (!$this->_connected)
@@ -56,6 +59,16 @@ class PostgreSQL extends Database
 		$query = $this->query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';");
 		while($result = $this->fetch($query))
 			array_push($this->_tables, $result["table_name"]);
+	}
+
+	/* Returns a query */
+	public function get_columns($table) {
+		$arr = array();
+		$query = $this->query("SELECT * from ".$table.";");
+		$i = pg_num_fields($query);
+		for ($j = 0; $j < $i; $j++)
+			$arr[pg_field_name($query, $j)] = pg_field_type($query, $j);
+		return $arr;
 	}
 }
 

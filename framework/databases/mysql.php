@@ -13,11 +13,14 @@ require_once($home_dir . "framework/database.php");
 
 class MySQL extends Database
 {
+	private $_dbname;
+
 	protected function connect() {
 		global 	$database_host,
-				$database_name,
-				$database_username,
-				$database_password;
+					$database_name,
+					$database_username,
+					$database_password;
+		$this->_dbname = $database_name;
 		$this->_link = mysql_connect($database_host, $database_username, $database_password, true);
 		if ($this->_link)
 			$this->_connected = mysql_select_db($database_name, $this->_link);
@@ -57,6 +60,15 @@ class MySQL extends Database
 		$query = $this->query("SHOW TABLES;");
 		while($result = $this->fetch($query))
 			array_push($this->_tables, $result[0]);
+	}
+
+	/* Returns a query */
+	public function get_columns($table) {
+		$arr = array();
+		$query = $this->query("SELECT COLUMN_NAME, DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='" . $table . "' AND TABLE_SCHEMA='" . $this->_dbname . "';");
+		while($col = $this->fetch($query))
+			$arr[$col["COLUMN_NAME"]] = $col["DATA_TYPE"];
+		return $arr;
 	}
 }
 

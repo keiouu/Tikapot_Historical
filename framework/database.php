@@ -50,6 +50,10 @@ abstract class Database
 	public abstract function fetch($result);
 	public abstract function disconnect();
 	public abstract function populate_tables();
+	/* Must return:
+	 * array("col"=>"type", etc);
+	 */
+	public abstract function get_columns($table);
 	
 	function __destruct() {
 		$this->disconnect();
