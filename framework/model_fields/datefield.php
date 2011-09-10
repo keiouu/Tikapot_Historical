@@ -26,7 +26,7 @@ class DateField extends ModelField
 	}
 	
 	public function validate() {
-		$regex = "[0-9]{1,4}-[0-9]{1,2}-[0-9]{1,2}"; // Very basic regex
+		$regex = "/^(\d{4})(-)(\d{2})(-)(\d{2})$/";
 		$valid = preg_match($regex, $this->value);
 		if (!$valid)
 			throw new FieldValidationException("Error: Date is not in the format: YYYY-MM-DD");
