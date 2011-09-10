@@ -60,8 +60,12 @@ abstract class Model
 	// Allows access to stored models
 	// Returns a single object
 	// Errors if multiple objects are found or no objects are found
-	public static function get($id = 0) {
-		$results = static::find(array("id" => $id));
+	// Arg can be an id or an array with multiple parameters
+	public static function get($arg = 0) {
+    		if (is_array($arg))
+			$results = static::find($arg);
+		else
+			$results = static::find(array("id" => $arg));
 		if ($results->count() == 0)
 			throw new ModelQueryException("No objects matching query exist");
 		if ($results->count() > 1)
@@ -72,7 +76,7 @@ abstract class Model
 	// Allows access to stored models
 	// Returns a single object (creates it if needed)
 	// Should have multiple arguments possible
-	public static function get_or_create($id = 0) {
+	public static function get_or_create($arg = 0) {
 		// TODO
 	}
 	
