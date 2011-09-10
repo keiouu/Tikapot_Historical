@@ -6,12 +6,14 @@
  * Licensed under the GNU General Public License version 3.
  * See LICENSE.txt
  */
+ 
+class FieldValidationException extends Exception { }
 
 abstract class ModelField
 {
 	protected static $db_type = "unknown";
-	protected $default_value = "";
-	public $value = "", $errors = array(), $_extra = "", $hide_from_query = False;
+	protected $default_value = "", $value = "";
+	public $errors = array(), $_extra = "", $hide_from_query = False;
 
 	public function __construct($default = "", $_extra = "") {
 			$this->default_value = $default;
@@ -19,8 +21,17 @@ abstract class ModelField
 			$this->_extra = $_extra;
 	}
 	
+	public function set_value($value) {
+		$this->value = $value;
+	}
+	
+	public function get_value() {
+		return $this->value;
+	}
+	
 	public function sql_value($db, $val = NULL) {
-		return ($val == NULL) ? $this->value : $val;
+		$val = ($val == NULL) ? $this->value : $val;
+		return (strlen("" . $val)  > 0) ? $val : "NULL";
 	}
 
 	public function get_default() {

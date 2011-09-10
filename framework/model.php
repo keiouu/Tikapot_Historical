@@ -48,7 +48,7 @@ abstract class Model
 	public function load_values($array) {
 		foreach ($this->fields as $name => $field)
 			if (array_key_exists($name, $array))
-				$field->value = $array[$name];
+				$field->set_value($array[$name]);
 	}
 	
 	/* Load field values from query result. Sets "from_db" to True */
@@ -145,17 +145,17 @@ abstract class Model
 	
 	public function __get($name) {
 		if ($name == "pk")
-			return $this->fields[$this->_pk()]->value;
+			$name = $this->_pk();
 		if (isset($this->fields[$name]))
-			return $this->fields[$name]->value;
+			return $this->fields[$name]->get_value();
 		throw new Exception("Invalid model field '$name'.");
 	}
 	
 	public function __set($name, $value) {
 		if ($name == "pk")
-			$this->fields[$this->_pk()]->value = $value;
-		else if (isset($this->fields[$name]))
-			$this->fields[$name]->value = $value;
+			$name = $this->_pk();
+		if (isset($this->fields[$name]))
+			$this->fields[$name]->set_value($value);
 		else
 			throw new Exception("Invalid model field '$name'.");
 	}
@@ -309,7 +309,7 @@ abstract class Model
 		$go = False;
 		foreach ($old_object->get_fields() as $name => $field) {
 			$new_val = $this->fields[$name];
-			if (strval($field->value) !== strval($new_val->value)) {
+			if (strval($field->get_value()) !== strval($new_val->get_value())) {
 				if ($go)
 					$query .= ", ";
 				$query .= $name . "=" . $new_val->sql_value($db);

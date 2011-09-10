@@ -13,18 +13,9 @@ ini_set('display_errors', '1');
 
 $home_dir = dirname(__FILE__) . '/';
 require_once($home_dir . "config.php");
-require_once($home_dir . "framework/core_models.php");
 require_once($home_dir . "contrib/cron.php");
-
-list($cron, $first_run) = Config::get_or_create(array("key"=>"cron_tick"));
-$cron->value = "0";
-if (!$first_run)
-	$cron->value = "".(intval($cron->value) + 1);
-
-$cron->save();
-
 foreach ($apps_list as $app) {
-	list($obj, $created) = CronStore::get_or_create(array("app_name"=>$app));
+	list($obj, $created) = CronStore::get_or_create(array("app_name" => $app));
 	
 	// Obtain lock
 	if ($obj->locked)
@@ -41,7 +32,9 @@ foreach ($apps_list as $app) {
 		}
 	}
 	
-	$obj->last_run = $cron->value;
+	print $obj->last_run;
+	$obj->last_run = date("Y-m-d H:m:s");
+	print $obj->last_run;
 	
 	// Release lock
 	$obj->locked = False;
