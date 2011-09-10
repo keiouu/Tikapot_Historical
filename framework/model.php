@@ -37,11 +37,17 @@ abstract class Model
 				return $name;
 	}
 	
-	/* Load field values from query result */
-	public function load_query_values($result) {
+	/* Format: array("COL"=>"VAL") */
+	public function load_values($array) {
 		foreach ($this->fields as $name => $field)
 			if (isset($result[$name]))
 				$field->value = $result[$name];
+	}
+	
+	/* Load field values from query result. Sets "from_db" to True */
+	public function load_query_values($result) {
+		$this->load_values($result);
+		$this->from_db = True;
 	}
 	
 	// Allows access to stored models
@@ -54,6 +60,8 @@ abstract class Model
 	// Returns a modelquery object containing the elements
 	// $query should be in the following format: (COL => Val, COL => (OPER => Val), etc)
 	public static function find($query) {
+		// TODO - validate columns
+		// TODO - get db value for each column
 		return static::get_modelquery(array("WHERE" => $query));
 	}
 	
@@ -74,10 +82,22 @@ abstract class Model
 	}
 
 	// Allows access to stored models
-	// Returns a single object (creates it if needed)
 	// Should have multiple arguments possible
+	// Arg should be an array in the following format: array("COL"=>"VAL", etc)
+	// Returns an array containing:  (a single object [creates it if needed], a boolean specifying weather or not the object is a new object)
 	public static function get_or_create($arg = 0) {
-		// TODO
+		$obj = NULL;
+		$created = False;
+		try {
+			$obj = static::get($arg);
+		}
+		catch (ModelQueryException $e) {
+			$obj = new static();
+			$obj->load_query_values($arg);
+			$obj->save();
+			$created = True;
+		}
+		return array($obj, $created);
 	}
 	
 	// Add a new field
