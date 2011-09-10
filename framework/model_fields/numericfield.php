@@ -19,10 +19,11 @@ class NumericField extends ModelField
 			$this->precision = $precision;
 	}
 	
-	public function sql_value($db) {
-		if (strlen($this->value) <= 0)
+	public function sql_value($db, $val = NULL) {
+		$val = ($val == NULL) ? $this->value : $val;
+		if (strlen($val) <= 0)
 			return "0";
-		return $this->value;
+		return $val;
 	}
 
 	public function validate() {

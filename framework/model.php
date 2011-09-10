@@ -17,12 +17,19 @@ class TableValidationException extends ValidationException { }
 
 abstract class Model
 {
-	private $from_db = False;
+	private $from_db = False, $_valid_model = True;
 	protected $fields = array(), $errors = array(), $table_name = "";
 	
 	public function __construct() {
 		$this->table_name = $this->get_table_name();
 		$this->add_field("id", new PKField(0, $max_length = 22, True));
+	}
+	
+	/* Hack for get and find */
+	private static function get_temp_instance() {
+		$obj = new static();
+		$obj->_valid_model = False;
+		return $obj;
 	}
 	
 	/* Allows custom model queries */
@@ -60,9 +67,17 @@ abstract class Model
 	// Returns a modelquery object containing the elements
 	// $query should be in the following format: (COL => Val, COL => (OPER => Val), etc)
 	public static function find($query) {
-		// TODO - validate columns
-		// TODO - get db value for each column
-		return static::get_modelquery(array("WHERE" => $query));
+		if (!is_array($query))
+			throw new ValidationException("Model::find argument must be an array!");
+		$parsed_query = array();
+		$db = Database::create();
+		$tempobj = static::get_temp_instance();
+		foreach ($query as $col => $val) {
+			if (!array_key_exists($col, $tempobj->fields))
+				throw new ValidationException("Model::find keys must be valid field names!");
+			$parsed_query[$col] = $tempobj->fields[$col]->sql_value($db, $val);
+		}
+		return static::get_modelquery(array("WHERE" => $parsed_query));
 	}
 	
 	// Allows access to stored models
@@ -73,7 +88,7 @@ abstract class Model
     		if (is_array($arg))
 			$results = static::find($arg);
 		else
-			$results = static::find(array("id" => $arg));
+			$results = static::find(array($this->_pk() => $arg));
 		if ($results->count() == 0)
 			throw new ModelQueryException("No objects matching query exist");
 		if ($results->count() > 1)

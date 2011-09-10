@@ -19,8 +19,8 @@ abstract class ModelField
 			$this->_extra = $_extra;
 	}
 	
-	public function sql_value($db) {
-		return $this->value;
+	public function sql_value($db, $val = NULL) {
+		return ($val == NULL) ? $this->value : $val;
 	}
 
 	public function get_default() {

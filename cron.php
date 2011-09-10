@@ -18,7 +18,7 @@ require_once($home_dir . "framework/core_models.php");
 list($cron, $first_run) = Config::get_or_create(array("key"=>"cron_tick"));
 $cron->value = "0";
 if (!$first_run)
-	$cron->value = "".(int($cron->value) + 1);
+	$cron->value = "".(intval($cron->value) + 1);
 
 $cron->save();
 

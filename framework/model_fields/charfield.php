@@ -19,10 +19,11 @@ class CharField extends ModelField
 			$this->max_length = $max_length;
 	}
 	
-	public function sql_value($db) {
-		if (strlen($this->value) <= 0)
+	public function sql_value($db, $val = NULL) {
+		$val = ($val == NULL) ? $this->value : $val;
+		if (strlen($val) <= 0)
 			return '';
-		return "'" . $this->value . "'";
+		return "'" . $val . "'";
 	}
 	
 	public function validate() {
