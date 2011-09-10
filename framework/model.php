@@ -47,8 +47,8 @@ abstract class Model
 	/* Format: array("COL"=>"VAL") */
 	public function load_values($array) {
 		foreach ($this->fields as $name => $field)
-			if (isset($result[$name]))
-				$field->value = $result[$name];
+			if (array_key_exists($name, $array))
+				$field->value = $array[$name];
 	}
 	
 	/* Load field values from query result. Sets "from_db" to True */
@@ -85,10 +85,13 @@ abstract class Model
 	// Errors if multiple objects are found or no objects are found
 	// Arg can be an id or an array with multiple parameters
 	public static function get($arg = 0) {
+		$results = NULL;
     		if (is_array($arg))
 			$results = static::find($arg);
-		else
-			$results = static::find(array($this->_pk() => $arg));
+		else {
+			$tempobj = static::get_temp_instance();
+			$results = static::find(array($tempobj->_pk() => $arg));
+		}
 		if ($results->count() == 0)
 			throw new ModelQueryException("No objects matching query exist");
 		if ($results->count() > 1)
@@ -321,10 +324,10 @@ abstract class Model
 	
 	// Saves the object to the database, returns ID
 	public function save() {
-		if (!$this->validate()) {
+		if (!$this->_valid_model)
+			throw new ValidationException("Error in save(): model is not supposed to exist! ");
+		if (!$this->validate())
 			throw new ValidationException("Error in save(): model did not validate! " . $this->get_error_string());
-			return False;
-		}
 		$this->create_table();
 		$db = Database::create();
 		$query = "";
