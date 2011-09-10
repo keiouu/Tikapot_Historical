@@ -13,6 +13,10 @@ require_once("datefield.php");
 class DateTimeField extends DateField
 {
 	protected static $db_type = "timestamp";
+	
+	public function validate() {
+		return True; // TODO
+	}
 }
 
 ?>

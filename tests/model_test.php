@@ -50,6 +50,8 @@ class TestModel3 extends Model
 }
 
 class ModelTest extends UnitTestCase {
+	// TODO - test new model features
+
 	function testModelTableValidation() {
 		$obj = new TestModel3();
 		$this->assertTrue($obj->verify_table());

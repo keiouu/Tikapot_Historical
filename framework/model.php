@@ -72,6 +72,7 @@ abstract class Model
 		$parsed_query = array();
 		$db = Database::create();
 		$tempobj = static::get_temp_instance();
+		$tempobj->create_table();
 		foreach ($query as $col => $val) {
 			if (!array_key_exists($col, $tempobj->fields))
 				throw new ValidationException("Model::find keys must be valid field names!");
@@ -100,8 +101,7 @@ abstract class Model
 	}
 
 	// Allows access to stored models
-	// Should have multiple arguments possible
-	// Arg should be an array in the following format: array("COL"=>"VAL", etc)
+	// Arg can be an id or an array with multiple search parameters
 	// Returns an array containing:  (a single object [creates it if needed], a boolean specifying weather or not the object is a new object)
 	public static function get_or_create($arg = 0) {
 		$obj = NULL;
@@ -111,7 +111,7 @@ abstract class Model
 		}
 		catch (ModelQueryException $e) {
 			$obj = new static();
-			$obj->load_query_values($arg);
+			$obj->load_values($arg);
 			$obj->save();
 			$created = True;
 		}
@@ -327,7 +327,7 @@ abstract class Model
 		if (!$this->_valid_model)
 			throw new ValidationException("Error in save(): model is not supposed to exist! ");
 		if (!$this->validate())
-			throw new ValidationException("Error in save(): model did not validate! " . $this->get_error_string());
+			throw new ValidationException("Error in " . get_class($this) . "::save(): model did not validate! <br />" . $this->get_error_string());
 		$this->create_table();
 		$db = Database::create();
 		$query = "";

@@ -24,13 +24,13 @@ class IntField extends ModelField
 	public function sql_value($db, $val = NULL) {
 		$val = ($val == NULL) ? $this->value : $val;
 		if (strlen($val) <= 0)
-			return "0";
-		return $val;
+			return 0;
+		return intval($val);
 	}
 
 	public function validate() {
-		if (strlen($this->value) > 0 && !is_int($this->value)) {
-			array_push($this->errors, "Value is not a valid integer!");
+		if (strlen($this->value) > 0 && (!is_int($this->value) && intval($this->value) == 0)) {
+			array_push($this->errors, "Value is not a valid integer: " . $this->value);
 			return False;
 		}
 		if ($this->max_length > 0 && strlen(strval($this->value)) > $this->max_length) {

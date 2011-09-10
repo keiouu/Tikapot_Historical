@@ -12,7 +12,9 @@ require_once("modelfield.php");
 class DateField extends ModelField
 {
 	protected static $db_type = "date";
+	
 	public function validate() {
+		return True; // TODO
 	}
 }
 

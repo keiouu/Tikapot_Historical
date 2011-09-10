@@ -1,6 +1,6 @@
 <?php
 /*
- * Tikapot Core Models
+ * Tikapot Cron Model
  * 
  * This file contains models that are essential for
  * the correct operation of tikapot core modules
@@ -14,14 +14,16 @@ global $home_dir;
 require_once($home_dir . "framework/model.php");
 require_once($home_dir . "framework/model_fields/init.php");
 
-class Config extends Model
+class CronStore extends Model
 {	
 	public function __construct() {
 		parent::__construct();
-		$this->add_field("key", new CharField("", 250));
-		$this->add_field("value", new CharField("", 250));
+		$this->add_field("app_name", new CharField());
+		$this->add_field("last_run", new DateTimeField());
+		$this->add_field("locked", new BooleanField());
 	}
 }
+
 
 ?>
 

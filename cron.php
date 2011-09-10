@@ -14,6 +14,7 @@ ini_set('display_errors', '1');
 $home_dir = dirname(__FILE__) . '/';
 require_once($home_dir . "config.php");
 require_once($home_dir . "framework/core_models.php");
+require_once($home_dir . "contrib/cron.php");
 
 list($cron, $first_run) = Config::get_or_create(array("key"=>"cron_tick"));
 $cron->value = "0";
