@@ -17,13 +17,25 @@ class BooleanField extends ModelField
 		parent::__construct($default);
 	}
 	
+	public function get_value() {
+		$val = strtolower($this->value);
+		return ($val == 'true' || $val == "t" || $val == "1");
+	}
+	
 	public function sql_value($db, $val = NULL) {
 		$val = ($val == NULL) ? $this->value : $val;
-		return ($val) ? "" . $val : "False";
+		if (strlen($val) == 0)
+			return $this->default_value;
+		$val = strtolower($val);
+		$val = ($val == 'true' || $val == "t" || $val == "1");
+		return ($val) ? "true" : "false";
 	}
 
 	public function validate() {
-		if (strtolower($this->value) != "true" && strtolower($this->value) != "false" && $this->value != "1" && $this->value != "0") {
+		if (strlen($this->value) == 0)
+			return True;
+		$val = strtolower($this->value);
+		if ($val != "t" && $val != "f" && $val != "true" && $val != "false" && $val != "1" && $val != "0") { // TODO - tidy into array
 			array_push($this->errors, "Value is not a valid boolean: " . $this->value);
 			return False;
 		}

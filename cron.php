@@ -32,9 +32,7 @@ foreach ($apps_list as $app) {
 		}
 	}
 	
-	print $obj->last_run;
 	$obj->last_run = date("Y-m-d H:m:s");
-	print $obj->last_run;
 	
 	// Release lock
 	$obj->locked = False;

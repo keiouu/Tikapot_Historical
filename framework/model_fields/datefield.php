@@ -20,6 +20,11 @@ class DateField extends ModelField
 			$this->auto_now = $auto_now;
 	}
 	
+	public function sql_value($db, $val = NULL) {
+		$val = ($val == NULL) ? $this->value : $val;
+		return (strlen($val) > 0) ? "'" . $val . "'" : "NULL";
+	}
+	
 	public function validate() {
 		$regex = "[0-9]{1,4}-[0-9]{1,2}-[0-9]{1,2}"; // Very basic regex
 		$valid = preg_match($regex, $this->value);
