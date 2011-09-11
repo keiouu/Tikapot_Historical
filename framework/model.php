@@ -18,7 +18,7 @@ class TableValidationException extends ValidationException { }
 abstract class Model
 {
 	private $from_db = False, $_valid_model = False;
-	protected $fields = array(), $errors = array(), $table_name = "";
+	protected $fields = array(), $errors = array();
 	
 	public function __construct() {
 		$this->table_name = $this->get_table_name();
@@ -134,9 +134,7 @@ abstract class Model
 	}
 	
 	public function get_table_name() {
-		if ($this->table_name === "")
-			$this->table_name = strtolower(get_class($this));
-		return $this->table_name;
+		return strtolower(get_class($this));
 	}
 	
 	// Get fields
