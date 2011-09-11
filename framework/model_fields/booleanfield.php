@@ -32,18 +32,10 @@ class BooleanField extends ModelField
 	}
 
 	public function validate() {
-		if (strlen($this->value) == 0)
-			return True;
-		$val = strtolower($this->value);
-		if ($val != "t" && $val != "f" && $val != "true" && $val != "false" && $val != "1" && $val != "0") { // TODO - tidy into array
-			array_push($this->errors, "Value is not a valid boolean: " . $this->value);
-			return False;
-		}
-		if (strlen($this->value) <= 0) {
-			array_push($this->errors, "Value is not a valid boolean: " . $this->value);
-			return False;
-		}
-		return True;
+		$valid = $this->value === true || $this->value === false;
+		if (!$valid)
+			array_push($this->errors, "Error: Boolean did not validate: " . $this->value);
+		return $valid;
 	}
 }
 

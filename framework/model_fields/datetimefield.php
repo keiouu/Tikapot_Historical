@@ -18,9 +18,10 @@ class DateTimeField extends DateField
 		if (strlen($this->value) == 0)
 			return True;
 		$regex = "/^(\d{4})(-)(\d{2})(-)(\d{2})\x20(\d{2})(:)(\d{2})(:)(\d{2})$/";
-		if (!preg_match($regex, $this->value))
-			throw new FieldValidationException("Error: Date is not in the format: YYYY-MM-DD HH:MM:SS");
-		return True;
+		$valid = preg_match($regex, $this->value) == 1;
+		if (!$valid)
+			array_push($this->errors, "Error: DateTime is not in the format: YYYY-MM-DD HH:MM:SS");
+		return $valid;
 	}
 }
 

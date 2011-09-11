@@ -29,15 +29,11 @@ class IntField extends ModelField
 	}
 
 	public function validate() {
-		if (strlen($this->value) > 0 && (!is_int($this->value) && intval($this->value) == 0)) {
-			array_push($this->errors, "Value is not a valid integer: " . $this->value);
-			return False;
-		}
-		if ($this->max_length > 0 && strlen(strval($this->value)) > $this->max_length) {
-			array_push($this->errors, "Value is longer than max_length");
-			return False;
-		}
-		return True;
+		$regex = "/^(\d{0,".$this->max_length."})$/";
+		$valid = preg_match($regex, $this->value) == 1; // These == 1 are not needed but clarify test results
+		if (!$valid)
+			array_push($this->errors, "Error: Integer did not validate: " . $this->value);
+		return $valid && (strpos($this->value, ".") == False);
 	}
 	
 	protected function sequence_name($db, $name, $table_name) {

@@ -26,11 +26,13 @@ class DateField extends ModelField
 	}
 	
 	public function validate() {
+		if (strlen($this->value) == 0)
+			return True;
 		$regex = "/^(\d{4})(-)(\d{2})(-)(\d{2})$/";
-		$valid = preg_match($regex, $this->value);
+		$valid = preg_match($regex, $this->value) == 1;
 		if (!$valid)
-			throw new FieldValidationException("Error: Date is not in the format: YYYY-MM-DD");
-		return True;
+			array_push($this->errors, "Error: Date is not in the format: YYYY-MM-DD");
+		return $valid;
 	}
 }
 
