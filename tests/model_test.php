@@ -30,75 +30,10 @@ class TestModel2 extends Model
 	}
 }
 
-class CustomModelQuery extends ModelQuery
-{
-	public function count() {
-		return 50;
-	}
-}
-
-class TestModel3 extends Model
-{
-	public function __construct() {
-		parent::__construct();
-		$this->add_field("prop", new NumericField(4.5));
-	}
-	
-	protected static function get_modelquery($query = array()) {
-		return new CustomModelQuery(new static(), $query);
-	}
-}
-
 class ModelTest extends UnitTestCase {
-	// TODO - test new model features
-
 	function testModelTableValidation() {
-		$obj = new TestModel3();
-		$this->assertTrue($obj->verify_table());
-	}
-
-	function testModelManagerOverride() {
-		$obj = new TestModel3();
-		$this->assertEqual(count(TestModel3::all()), 50);
-	}
-	
-	function testModelManager() {
-		$db = Database::create();
 		$obj = new TestModel();
-		$obj->create_table(); // This is here to prevent the query below failing if no table exists yet
-		$db->query("DELETE FROM " . $obj->get_table_name() . ";");
-		$obj->test_prop = "Hello";
-		$obj->other_prop = 1.0;
-		$id = $obj->save();
-		$this->assertTrue($id > 0);
-		$this->assertEqual(TestModel::get($id)->test_prop, $obj->test_prop);
-		$obj->test_prop = "Bye!";
-		$obj->save();
-		$this->assertEqual(TestModel::get($id)->test_prop, "Bye!");
-		$obj->test_prop = "Hi!";
-		$obj->other_prop = 2.0;
-		$obj->save();
-		$this->assertEqual(TestModel::get($id)->test_prop, "Hi!");
-		$this->assertEqual(TestModel::get($id)->other_prop, 2.0);
-		$obj1 = new TestModel();
-		$obj1->other_prop = 6.0;
-		$obj1->save();
-		$obj2 = new TestModel();
-		$obj2->other_prop = 9.0;
-		$obj2id = $obj2->save();
-		$this->assertEqual(TestModel::all()->order_by("other_prop")->get(0)->other_prop, 2.0);
-		$this->assertEqual(TestModel::all()->order_by(array("other_prop", "DESC"))->get(0)->other_prop, 9.0);
-		$this->assertEqual(count(TestModel::find(array("id"=>$obj2id))), 1);
-		$obj2->delete();
-		$this->assertEqual(count(TestModel::find(array("id"=>$obj2id))), 0);
-		
-		// Test shortcuts
-		list($obj, $created) = TestModel::get_or_create(array("test_prop" => "goctst"));
-		$this->assertTrue($created);
-		$this->assertEqual($obj->test_prop, "goctst");
-		$this->assertEqual(TestModel::get(array("test_prop" => "goctst"))->test_prop, "goctst");
-		list($obj, $created) = TestModel::get_or_create(array("test_prop" => "goctst"));
-		$this->assertFalse($created);
+		$this->assertTrue($obj->verify_table());
 	}
 	
 	function testModelDB() {

@@ -18,6 +18,8 @@ class AllTests extends TestSuite {
         $this->addFile($home_dir . 'tests/database_test.php');
         $this->addFile($home_dir . 'tests/timer_test.php');
         $this->addFile($home_dir . 'tests/model_test.php');
+        $this->addFile($home_dir . 'tests/model_table_test.php');
+        $this->addFile($home_dir . 'tests/modelquery_test.php');
     }
 }
 ?>
