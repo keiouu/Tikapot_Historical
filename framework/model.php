@@ -21,7 +21,6 @@ abstract class Model
 	protected $fields = array(), $errors = array();
 	
 	public function __construct() {
-		$this->table_name = $this->get_table_name();
 		$this->add_field("id", new PKField(0, $max_length = 22, True));
 		$this->_valid_model = True;
 	}
