@@ -17,12 +17,13 @@ class TableValidationException extends ValidationException { }
 
 abstract class Model
 {
-	private $from_db = False, $_valid_model = True;
+	private $from_db = False, $_valid_model = False;
 	protected $fields = array(), $errors = array(), $table_name = "";
 	
 	public function __construct() {
 		$this->table_name = $this->get_table_name();
 		$this->add_field("id", new PKField(0, $max_length = 22, True));
+		$this->_valid_model = True;
 	}
 	
 	/* Hack for get and find */
@@ -325,7 +326,7 @@ abstract class Model
 	// Saves the object to the database, returns ID
 	public function save() {
 		if (!$this->_valid_model)
-			throw new ValidationException("Error in save(): model is not supposed to exist! ");
+			throw new ValidationException("Error in save(): Model is not supposed to exist! (Perhaps you forgot to call parent constructor?) in " . get_class($this));
 		if (!$this->validate())
 			throw new ValidationException("Error in " . get_class($this) . "::save(): model did not validate! <br />" . $this->get_error_string());
 		$this->create_table();

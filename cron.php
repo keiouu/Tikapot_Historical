@@ -27,7 +27,7 @@ foreach ($apps_list as $app) {
 	foreach ($app_paths as $app_path) {
 		$filename = $home_dir . $app_path . "/" . $app . "/cron.php";
 		if (file_exists($filename)) {
-			@include($filename);
+			@include($filename); // TODO - is it time to run?
 			break;
 		}
 	}
