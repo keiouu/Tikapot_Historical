@@ -97,6 +97,8 @@ class ModelTest extends UnitTestCase {
 		$this->assertTrue($created);
 		$this->assertEqual($obj->test_prop, "goctst");
 		$this->assertEqual(TestModel::get(array("test_prop" => "goctst"))->test_prop, "goctst");
+		list($obj, $created) = TestModel::get_or_create(array("test_prop" => "goctst"));
+		$this->assertFalse($created);
 	}
 	
 	function testModelDB() {
