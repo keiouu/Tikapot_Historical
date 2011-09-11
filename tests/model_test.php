@@ -91,6 +91,12 @@ class ModelTest extends UnitTestCase {
 		$this->assertEqual(count(TestModel::find(array("id"=>$obj2id))), 1);
 		$obj2->delete();
 		$this->assertEqual(count(TestModel::find(array("id"=>$obj2id))), 0);
+		
+		// Test shortcuts
+		list($obj, $created) = TestModel::get_or_create(array("test_prop" => "goctst"));
+		$this->assertTrue($created);
+		$this->assertEqual($obj->test_prop, "goctst");
+		$this->assertEqual(TestModel::get(array("test_prop" => "goctst"))->test_prop, "goctst");
 	}
 	
 	function testModelDB() {
