@@ -6,7 +6,9 @@
  * Licensed under the GNU General Public License version 3.
  * See LICENSE.txt
  */
- 
+
+// TODO - test FK field saving by parent model
+
 global $home_dir;
 require_once($home_dir . "lib/simpletest/autorun.php");
 require_once($home_dir . "framework/model.php");

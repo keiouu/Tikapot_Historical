@@ -17,6 +17,7 @@ include_once("pkfield.php");
 include_once("booleanfield.php");
 include_once("datefield.php");
 include_once("datetimefield.php");
+include_once("fkfield.php");
 
 ?>
 

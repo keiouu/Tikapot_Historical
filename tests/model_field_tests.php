@@ -77,6 +77,13 @@ class ModelFieldTest extends UnitTestCase {
 		$field->set_value(date("Y-m-d h:m:s"));
 		$this->assertTrue($field->validate());
 	}
+	
+	function testFKField() {
+		$field = new FKField("testModels.TestFKModel");
+		$field->test_prop = "hello";
+		$field->save();
+		$this->assertTrue($field->validate());
+	}
 }
 ?>
 
