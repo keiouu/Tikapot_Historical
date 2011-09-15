@@ -25,9 +25,6 @@ class Request
 		$this->_pagetimer = $pagetimer;
 		if (isset($this->get['page'])) {
 			$this->page = $this->get['page'];
-			// Ensure the page has a trailing slash
-			if ($this->page[strlen($this->page)-1] !== '/')
-				$this->page .= '/';
 		}
 	}
 	
