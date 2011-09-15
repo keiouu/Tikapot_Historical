@@ -21,6 +21,9 @@ require_once($home_dir . "contrib/timer.php");
 $view_manager = new ViewManager();
 load_applications();
 $request = new Request(Timer::startAt($time));
+
+header('Content-type: ' . $request->mimeType);
+
 $view_manager->get($request->page)->render($request);
 
 ?>
