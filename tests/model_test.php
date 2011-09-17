@@ -96,12 +96,12 @@ class ModelTest extends UnitTestCase {
 		$this->assertEqual($obj->test_prop, $fields['test_prop']->get_default());
 	}
 	
-	function testModelException() {
-		// Test one pk field rule
+	function testCustomPKs() {
 		$obj = new TestModel2();
-		$this->expectException();
-		$obj->id;
-		// DO NOT ADD TESTS BELOW THIS LINE
+		$this->assertEqual($obj->pk, $obj->test_pk);
+		$this->assertEqual($obj->get_field("pk"), $obj->get_field("test_pk"));
+		$this->assertTrue(isset($obj->pk));
+		$this->assertFalse(isset($obj->id));
 	}
 	function testModelValidation() {
 		// Test validation
