@@ -38,7 +38,7 @@ class ModelFieldTest extends UnitTestCase {
 	}
 	
 	function testCharField() {
-		$field = new CharField("a", 5);
+		$field = new CharField(5, "a");
 		$this->assertEqual($field->get_value(), "a");
 		$field->set_value("abcde");
 		$this->assertTrue($field->validate());

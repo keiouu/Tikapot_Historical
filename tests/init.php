@@ -21,6 +21,7 @@ class AllTests extends TestSuite {
         $this->addFile($home_dir . 'tests/model_table_test.php');
         $this->addFile($home_dir . 'tests/modelquery_test.php');
         $this->addFile($home_dir . 'tests/model_field_tests.php');
+        $this->addFile($home_dir . 'tests/auth_test.php');
     }
 }
 ?>

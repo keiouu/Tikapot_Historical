@@ -18,7 +18,7 @@ class User extends Model
 {	
 	public function __construct() {
 		parent::__construct();
-		$this->add_field("username", new CharField());
+		$this->add_field("username", new CharField($max_length=20));
 		$this->add_field("password", new DateTimeField());
 		$this->add_field("email", new DateTimeField());
 		$this->add_field("created", new BooleanField());

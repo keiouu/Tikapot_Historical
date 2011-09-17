@@ -19,7 +19,7 @@ class TestModel extends Model
 {
 	public function __construct() {
 		parent::__construct();
-		$this->add_field("test_prop", new CharField("", $max_length=7));
+		$this->add_field("test_prop", new CharField($max_length=7));
 		$this->add_field("other_prop", new NumericField(4.5));
 	}
 }
@@ -55,10 +55,10 @@ class ModelTest extends UnitTestCase {
 		$this->assertTrue($obj->create_table());
 		$this->assertTrue($obj->save());
 		
-		$test_field = new CharField("test", $max_length=7);
+		$test_field = new CharField($max_length=7, "test");
 		$this->assertEqual($test_field->db_create_query($db, "test_field", "testmodel"), "test_field VARCHAR (7) DEFAULT 'test'");
-		$test_field = new CharField("test");
-		$this->assertEqual($test_field->db_create_query($db, "test_field", "testmodel"), "test_field VARCHAR DEFAULT 'test'");
+		$test_field = new CharField($max_length=2);
+		$this->assertEqual($test_field->db_create_query($db, "test_field", "testmodel"), "test_field VARCHAR (2)");
 		$test_field = new CharField();
 		$this->assertEqual($test_field->db_create_query($db, "test_field", "testmodel"), "test_field VARCHAR");
 		$test_field = new NumericField(1.0, "4,2");
