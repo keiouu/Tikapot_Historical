@@ -62,6 +62,9 @@ abstract class ModelField
 	public function db_extra_create_query_post($db, $name, $table_name) {
 		return "";
 	}
+	
+	/* This recieves pre-save signal from it's model. */
+	public function pre_save($model, $update) {}
 }
 
 ?>

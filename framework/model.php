@@ -329,6 +329,10 @@ abstract class Model
 		$this->create_table();
 		$db = Database::create();
 		$query = "";
+		
+		foreach ($this->get_fields() as $name => $field)
+			$field->pre_save($this, $this->from_db);
+			
 		if (!$this->from_db) {
 			$query = $db->query($this->insert_query($db));
 			$id = 0;
