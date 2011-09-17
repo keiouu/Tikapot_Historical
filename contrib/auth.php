@@ -18,11 +18,19 @@ class User extends Model
 {	
 	public function __construct() {
 		parent::__construct();
-		$this->add_field("username", new CharField($max_length=20));
-		$this->add_field("password", new DateTimeField());
-		$this->add_field("email", new DateTimeField());
-		$this->add_field("created", new BooleanField());
-		$this->add_field("last_login", new BooleanField());
+		$this->add_field("username", new CharField($max_length=40));
+		$this->add_field("password", new CharField($max_length=40));
+		$this->add_field("email", new CharField($max_length=50));
+		$this->add_field("created", new DateTimeField($auto_now_add = True));
+		$this->add_field("last_login", new DateTimeField($auto_now_add = True, $auto_now = True));
+	}
+	
+	public function auth($username, $password) {
+		// TODO
+	}
+	
+	public function create_user($username, $password, $email) {
+		// TODO
 	}
 }
 

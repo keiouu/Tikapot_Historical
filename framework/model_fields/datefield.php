@@ -14,7 +14,7 @@ class DateField extends ModelField
 	protected static $db_type = "date";
 	private $auto_now_add = False, $auto_now = False;
 	
-	public function __construct($default = "", $auto_now_add = False, $auto_now = False, $_extra = "") {
+	public function __construct($auto_now_add = False, $auto_now = False, $default = "", $_extra = "") {
 			parent::__construct($default, $_extra);
 			$this->auto_now_add = $auto_now_add;
 			$this->auto_now = $auto_now;
