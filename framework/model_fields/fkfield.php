@@ -34,20 +34,18 @@ class FKField extends ModelField
 		return $this;
 	}
 	
+	public function get_db_type() {
+		$db_type = static::$db_type;
+		if ($this->_class)
+			$db_type = $this->_class->get_field("pk")->get_db_type();
+		return $db_type;
+	}
+	
 	private function grab_object($class) {
 		if ($this->value != "")
 			$this->_class = call_user_func(array($class, 'get'), array("pk" => $this->value));
 		else
 			$this->_class = new $class();
-	}
-
-	public function db_create_query($db, $name, $table_name) {
-		$db_type = static::$db_type;
-		if ($this->_class) {
-			$class = $this->_class->get_field("pk");
-			$db_type = $class->get_db_type();
-		}
-		return $name . " " . $db_type;
 	}
 	
 	private function update($model) {
