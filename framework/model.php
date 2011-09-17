@@ -141,6 +141,13 @@ abstract class Model
 		return $this->fields;
 	}
 	
+	// Get field
+	public function get_field($name) {
+		if ($name == "pk")
+			$name = $this->_pk();
+		return $this->fields[$name];
+	}
+	
 	public function __get($name) {
 		if ($name == "pk")
 			$name = $this->_pk();

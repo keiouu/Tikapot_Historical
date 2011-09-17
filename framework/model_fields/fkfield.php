@@ -6,8 +6,6 @@
  * Licensed under the GNU General Public License version 3.
  * See LICENSE.txt
  */
- 
-// Left TODO - save foreign ID's
 
 global $home_dir;
 require_once("modelfield.php");
@@ -18,12 +16,11 @@ class FKValidationException extends Exception { }
 class FKField extends ModelField
 {
 	protected static $db_type = "varchar"; // Beacuse the FK could be any type :(
-	private $_class, $_fid, $_recurse_check;
+	private $_class, $_recurse_check;
 	
 	public function __construct($model) {
 		parent::__construct();
 		$this->_class = Null;
-		$this->_fid = "";
 		$this->update($model);
 		$this->_recurse_check = false;
 	}
@@ -38,10 +35,19 @@ class FKField extends ModelField
 	}
 	
 	private function grab_object($class) {
-		if ($this->_fid != "")
-			$this->_class = call_user_func(array($class, 'get'), array("pk" => $this->_fid));
+		if ($this->value != "")
+			$this->_class = call_user_func(array($class, 'get'), array("pk" => $this->value));
 		else
 			$this->_class = new $class();
+	}
+
+	public function db_create_query($db, $name, $table_name) {
+		$db_type = static::$db_type;
+		if ($this->_class) {
+			$class = $this->_class->get_field("pk");
+			$db_type = $class->get_db_type();
+		}
+		return $name . " " . $db_type;
 	}
 	
 	private function update($model) {

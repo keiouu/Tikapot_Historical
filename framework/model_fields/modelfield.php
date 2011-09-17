@@ -29,6 +29,10 @@ abstract class ModelField
 		return $this->value;
 	}
 	
+	public function get_db_type() {
+		return static::$db_type;
+	}
+	
 	public function sql_value($db, $val = NULL) {
 		$val = ($val == NULL) ? $this->value : $val;
 		return (strlen("" . $val)  > 0) ? $val : "NULL";
