@@ -12,7 +12,31 @@ require_once($home_dir . "lib/simpletest/autorun.php");
 require_once($home_dir . "framework/model.php");
 require_once($home_dir . "framework/model_fields/init.php");
 
+class TestModelFK extends Model
+{
+	public function __construct() {
+		parent::__construct();
+		$this->add_field("val_prop", new CharField("", $max_length=7));
+		$this->add_field("other_prop", new FKField("testModels.TestFKModel"));
+	}
+}
+
 class ModelFieldTest extends UnitTestCase {
+	function testFKField() {
+		$field = new FKField("testModels.TestFKModel");
+		$field->test_prop = "hello";
+		$field->save();
+		$this->assertTrue($field->validate());
+		$model = new TestModelFK();
+		$model->val_prop = "testme";
+		$model->other_prop->test_prop = "testtoo";
+		$this->assertEqual($model->other_prop->test_prop, "testtoo");
+		$id = $model->save();
+		$test = TestModelFK::get($id);
+		$this->assertTrue($test);
+		$this->assertEqual($test->other_prop->test_prop, $model->other_prop->test_prop);
+	}
+	
 	function testCharField() {
 		$field = new CharField("a", 5);
 		$this->assertEqual($field->get_value(), "a");
@@ -75,13 +99,6 @@ class ModelFieldTest extends UnitTestCase {
 		$field->set_value("abcd-ef-gh ad:fe:gt");
 		$this->assertFalse($field->validate());
 		$field->set_value(date("Y-m-d h:m:s"));
-		$this->assertTrue($field->validate());
-	}
-	
-	function testFKField() {
-		$field = new FKField("testModels.TestFKModel");
-		$field->test_prop = "hello";
-		$field->save();
 		$this->assertTrue($field->validate());
 	}
 }
