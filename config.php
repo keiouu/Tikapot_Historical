@@ -16,5 +16,8 @@ $database_password = "tikapot";
 $app_paths = array("apps", "contrib", "tests");
 $apps_list = array("example");
 
+
+// Contrib Config
+$config_session_timeout = 3600; // 1 Hour
 ?>
 

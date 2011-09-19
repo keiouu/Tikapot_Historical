@@ -39,7 +39,7 @@ class User extends Model
 		list($usersession, $created) = UserSession::get_or_create(array("userid"=>$this->pk));
 		if ($created) {
 			$usersession->keycode = sha1($this->pk + (microtime() * rand(0, 198)));
-			$expiry = time() + (3600); // 1 hour
+			$expiry = time() + ($_GLOBALS['config_session_timeout']); // 1 hour
 			$usersession->expires = date(DateTimeField::$FORMAT, $expiry);
 			$usersession->save();
 		}
