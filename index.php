@@ -12,8 +12,9 @@ $time = microtime(True);
 ini_set('display_errors', '1');
 
 // TODO validation check: No duplicate apps/models
+define("home_dir", dirname(__FILE__) . '/');
+$home_dir = home_dir;
 
-$home_dir = dirname(__FILE__) . '/';
 require_once($home_dir . "config.php");
 require_once($home_dir . "framework/view_manager.php");
 require_once($home_dir . "framework/app_loader.php");

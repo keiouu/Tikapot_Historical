@@ -7,10 +7,9 @@
  * See LICENSE.txt
  */
 
-global $home_dir;
-require_once($home_dir . "framework/database.php");
-require_once($home_dir . "framework/model_query.php");
-require_once($home_dir . "framework/model_fields/init.php");
+require_once(home_dir . "framework/database.php");
+require_once(home_dir . "framework/model_query.php");
+require_once(home_dir . "framework/model_fields/init.php");
 
 class ValidationException extends Exception { }
 class TableValidationException extends ValidationException { }

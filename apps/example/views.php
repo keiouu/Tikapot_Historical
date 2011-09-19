@@ -7,8 +7,7 @@
  * See LICENSE.txt
  */
 
-global $home_dir;
-require_once($home_dir . "framework/view.php");
+require_once(home_dir . "framework/view.php");
 
 class ExampleView extends View
 {

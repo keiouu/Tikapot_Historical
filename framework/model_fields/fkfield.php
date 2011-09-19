@@ -7,9 +7,8 @@
  * See LICENSE.txt
  */
 
-global $home_dir;
-require_once("modelfield.php");
-require_once($home_dir . "framework/utils.php");
+require_once(home_dir . "framework/model_fields/modelfield.php");
+require_once(home_dir . "framework/utils.php");
 
 class FKValidationException extends Exception { }
 

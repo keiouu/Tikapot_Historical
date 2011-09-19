@@ -7,13 +7,10 @@
  * See LICENSE.txt
  */
 
-// TODO - test FK field saving by parent model
-
-global $home_dir;
-require_once($home_dir . "lib/simpletest/autorun.php");
-require_once($home_dir . "framework/model.php");
-require_once($home_dir . "framework/model_query.php");
-require_once($home_dir . "framework/database.php");
+require_once(home_dir . "lib/simpletest/autorun.php");
+require_once(home_dir . "framework/model.php");
+require_once(home_dir . "framework/model_query.php");
+require_once(home_dir . "framework/database.php");
 
 class TestModel extends Model
 {
