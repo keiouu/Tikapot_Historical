@@ -78,6 +78,7 @@ class User extends Model
 			return false;
 		$user = $arr->get(0);
 		$user->construct_session();
+		$user->save(); // Update last_login
 		return true;
 	}
 	
