@@ -129,7 +129,7 @@ abstract class Model
 		if (count($args) <= 0)
 			return Null;
 		try {
-			$obj = static::get($arg);
+			$obj = static::get($args);
 		}
 		catch (ModelQueryException $e) {
 			$obj = new static();
