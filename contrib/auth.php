@@ -54,16 +54,19 @@ class User extends Model
 		if ($created) {
 			$usersession->keycode = sha1($this->pk + (microtime() * rand(0, 198)));
 			$this->update_session($usersession);
+			$_SESSION['user'] = array("userid"=>$this->pk, "keycode"=>$usersession->keycode);
 		} else {
 			if ($usersession->expires > date(DateTimeField::$FORMAT, time())) {
 				$this->logout($usersession);
 				return;
 			} else {
-				$this->update_session($usersession);
+				if ($usersession->keycode != $_SESSION['user']['keycode'])
+					throw new AuthException("Error: session key does not match!");
+				else
+					$this->update_session($usersession);
 			}
 		}
 		$usersession->save();
-		$_SESSION['user'] = array("userid"=>$this->pk, "keycode"=>$usersession->keycode);
 	}
 	
 	private static function encode($password) { return sha1($password); }
