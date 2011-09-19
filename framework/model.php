@@ -124,6 +124,15 @@ abstract class Model
 		return array($obj, $created);
 	}
 	
+	public static function create($args = array()) {
+		if (count($args) <= 0)
+			return Null;
+		$obj = new static();
+		$obj->load_values($args);
+		$obj->save();
+		return $obj;
+	}
+	
 	// Add a new field
 	protected function add_field($name, $type) {
 		if (strtolower(get_class($type)) === "pkfield") {
