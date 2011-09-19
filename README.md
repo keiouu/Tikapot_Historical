@@ -1,5 +1,7 @@
 Tikapot is a simple PHP MVC framework
 
+Please note: Until the first stable release, the API should be considered unstable!
+
 Contrib List:
 1. Timer Class
 2. Session Layer

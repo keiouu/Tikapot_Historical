@@ -85,6 +85,15 @@ class ModelFieldTest extends UnitTestCase {
 		$this->assertFalse($field->validate());
 		$field->set_value(date("Y-m-d"));
 		$this->assertTrue($field->validate());
+		
+		$field = new DateField($auto_now_add = True, $auto_now = True);
+		$field->pre_save(Null, True);
+		$this->assertEqual($field->get_value(), date(DateField::$FORMAT, time()));
+		$field = new DateField($auto_now_add = True, $auto_now = False);
+		$field->pre_save(Null, True);
+		$this->assertNotEqual($field->get_value(), date(DateField::$FORMAT, time()));
+		$field->pre_save(Null, False);
+		$this->assertEqual($field->get_value(), date(DateField::$FORMAT, time()));
 	}
 	
 	function testDateTimeField() {
@@ -100,6 +109,15 @@ class ModelFieldTest extends UnitTestCase {
 		$this->assertFalse($field->validate());
 		$field->set_value(date("Y-m-d h:m:s"));
 		$this->assertTrue($field->validate());
+		
+		$field = new DateTimeField($auto_now_add = True, $auto_now = True);
+		$field->pre_save(Null, True);
+		$this->assertEqual($field->get_value(), date(DateTimeField::$FORMAT, time()));
+		$field = new DateTimeField($auto_now_add = True, $auto_now = False);
+		$field->pre_save(Null, True);
+		$this->assertNotEqual($field->get_value(), date(DateTimeField::$FORMAT, time()));
+		$field->pre_save(Null, False);
+		$this->assertEqual($field->get_value(), date(DateTimeField::$FORMAT, time()));
 	}
 }
 ?>

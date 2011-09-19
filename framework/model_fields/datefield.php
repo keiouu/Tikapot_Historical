@@ -21,6 +21,12 @@ class DateField extends ModelField
 			$this->auto_now = $auto_now;
 	}
 	
+	/* This recieves pre-save signal from it's model. */
+	public function pre_save($model, $update) {
+		if ($this->auto_now || (!$update && $this->auto_now_add))
+			$this->value = date(static::$FORMAT, time());
+	}
+	
 	public function sql_value($db, $val = NULL) {
 		$val = ($val == NULL) ? $this->value : $val;
 		return (strlen($val) > 0) ? "'" . $val . "'" : "NULL";
