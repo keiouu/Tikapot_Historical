@@ -62,7 +62,7 @@ class ModelQuery implements Iterator, Countable
 				}
 				
 				if ($clause === "WHERE") {
-					if ($count > 1)
+					if ($count > 0)
 						$query .= " AND "; # TODO - implement OR etc
 					$query .= $name;
 					if (is_array($val))
