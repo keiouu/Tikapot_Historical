@@ -12,6 +12,7 @@ require_once("datefield.php");
 
 class DateTimeField extends DateField
 {
+	public static $FORMAT = "Y-m-d H:i:s";
 	protected static $db_type = "timestamp";
 	
 	public function validate() {

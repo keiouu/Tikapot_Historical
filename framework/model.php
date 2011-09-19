@@ -81,6 +81,12 @@ abstract class Model
 		return static::get_modelquery(array("WHERE" => $parsed_query));
 	}
 	
+	// Do the given object values exist in the database?
+	public static function exists($query) {
+		$lst = static::find($query);
+		return count($len) > 0;
+	}
+	
 	// Allows access to stored models
 	// Returns a single object
 	// Errors if multiple objects are found or no objects are found

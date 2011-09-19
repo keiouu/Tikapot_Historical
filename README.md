@@ -3,8 +3,7 @@ Tikapot is a simple PHP MVC framework
 Contrib List:
 1. Timer Class
 2. Session Layer
-3. Admin Portal
-4. Developer Portal
+3. Auth Layer
 
 
 #Examples

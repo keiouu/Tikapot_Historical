@@ -11,6 +11,7 @@ require_once("modelfield.php");
 
 class DateField extends ModelField
 {
+	public static $FORMAT = "Y-m-d";
 	protected static $db_type = "date";
 	private $auto_now_add = False, $auto_now = False;
 	
