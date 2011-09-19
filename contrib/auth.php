@@ -44,22 +44,25 @@ class User extends Model
 		$usersession->delete();
 	}
 	
-	private function construct_session($try = 0) {
+	private function update_session($usersession) {
+		$expiry = time() + ($GLOBALS['config_session_timeout']); // 1 hour
+		$usersession->expires = date(DateTimeField::$FORMAT, $expiry);
+	}
+	
+	private function construct_session() {
 		list($usersession, $created) = UserSession::get_or_create(array("userid"=>$this->pk));
 		if ($created) {
 			$usersession->keycode = sha1($this->pk + (microtime() * rand(0, 198)));
-			$expiry = time() + ($GLOBALS['config_session_timeout']); // 1 hour
-			$usersession->expires = date(DateTimeField::$FORMAT, $expiry);
-			$usersession->save();
+			$this->update_session($usersession);
 		} else {
 			if ($usersession->expires > date(DateTimeField::$FORMAT, time())) {
-				if ($try == 0) {
-					$this->logout($usersession);
-					return $this->construct_session(1);
-				}
-				die("Error: Cannot logout!");
+				$this->logout($usersession);
+				return;
+			} else {
+				$this->update_session($usersession);
 			}
 		}
+		$usersession->save();
 		$_SESSION['user'] = array("userid"=>$this->pk, "keycode"=>$usersession->keycode);
 	}
 	
