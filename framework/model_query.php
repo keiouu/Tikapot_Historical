@@ -83,7 +83,7 @@ class ModelQuery implements Iterator, Countable
 			if ($clause === "ONLY")
 				$selection .= ")";
 		}
-		$this->_built_queries[$selection] = "SELECT $selection FROM " . $this->_model->get_table_name() . "$query;";
+		$this->_built_queries[$selection] = "SELECT $selection FROM \"" . $this->_model->get_table_name() . "\"$query;";
 		return $this->_built_queries[$selection];
 	}
 	

@@ -14,6 +14,7 @@ require_once($home_dir . "framework/model_fields/init.php");
 
 class ValidationException extends Exception { }
 class TableValidationException extends ValidationException { }
+class ModelExistsException extends Exception {}
 
 abstract class Model
 {
@@ -127,10 +128,16 @@ abstract class Model
 	public static function create($args = array()) {
 		if (count($args) <= 0)
 			return Null;
-		$obj = new static();
-		$obj->load_values($args);
-		$obj->save();
-		return $obj;
+		try {
+			$obj = static::get($arg);
+		}
+		catch (ModelQueryException $e) {
+			$obj = new static();
+			$obj->load_values($args);
+			$obj->save();
+			return $obj;
+		}
+		throw new ModelExistsException("Error: Model already exists!");
 	}
 	
 	// Add a new field
@@ -199,7 +206,7 @@ abstract class Model
 	public function db_create_query($db) {
 		$table_name = $this->get_table_name();
 		$post_scripts = "";
-		$SQL = "CREATE TABLE " . $table_name . " (";
+		$SQL = "CREATE TABLE \"" . $table_name . "\" (";
 		$i = 0;
 		foreach ($this->get_fields() as $name => $field) {
 			if ($i > 0) $SQL .= ", ";
@@ -319,13 +326,13 @@ abstract class Model
 		$extra = "";
 		if ($db->get_type() == "psql")
 			$extra = " RETURNING " . $this->_pk();
-		return "INSERT INTO " . $this->get_table_name() . " (" . $keys . ") VALUES (" . $values . ")" . $extra . ";";
+		return "INSERT INTO \"" . $this->get_table_name() . "\" (" . $keys . ") VALUES (" . $values . ")" . $extra . ";";
 	}
 	
 	// Insert the object to the database
 	public function update_query($db) {
 		$old_object = static::get($this->pk);
-		$query = "UPDATE " . $this->get_table_name() . " SET ";
+		$query = "UPDATE \"" . $this->get_table_name() . "\" SET ";
 		$go = False;
 		foreach ($old_object->get_fields() as $name => $field) {
 			$new_val = $this->fields[$name];
@@ -376,7 +383,7 @@ abstract class Model
 	}
 
 	public function delete_query($db) {
-		return "DELETE FROM " . $this->get_table_name() . " WHERE ". $this->_pk() ."='" . $this->pk . "';";
+		return "DELETE FROM \"" . $this->get_table_name() . "\" WHERE ". $this->_pk() ."='" . $this->pk . "';";
 	}
 
 	/* Returns True on success, False on failure */
