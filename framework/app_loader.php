@@ -9,10 +9,10 @@
  */
  
 function load_applications() {
-	global $app_paths, $apps_list, $home_dir;
+	global $app_paths, $apps_list;
 	foreach ($apps_list as $app) {
 		foreach ($app_paths as $app_path) {
-			$filename = $home_dir . $app_path . "/" . $app . "/init.php";
+			$filename = home_dir . $app_path . "/" . $app . "/init.php";
 			if (file_exists($filename)) {
 				include($filename);
 				break;

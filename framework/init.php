@@ -18,9 +18,7 @@ $time = microtime(True);
 /* Start up the signal manager, register some signals */
 require_once(home_dir . "framework/signal_manager.php");
 $signal_manager = new SignalManager();
-$signal_manager->register("page_setup");
-$signal_manager->register("page_load_start");
-$signal_manager->register("page_load_end");
+$signal_manager->register("page_setup", "page_load_start", "page_load_end");
 
 /* Start up the view manager */
 require_once(home_dir . "framework/view_manager.php");

@@ -17,10 +17,13 @@ class SignalManager
 		$this->signals = array();
 	}
 	
-	public function register($signal) {
-		if (isset($this->signals[$signal]))
-			throw new SignalException("Signal already registered! " . $signal);
-		$this->signals[$signal] = array();
+	public function register() {
+		$arg_list = func_get_args();
+   	foreach ($arg_list as $signal) {
+			if (isset($this->signals[$signal]))
+				throw new SignalException("Signal already registered! " . $signal);
+			$this->signals[$signal] = array();
+		}
 	}
 	
 	public function hook($signal, $function, $obj = Null) {
