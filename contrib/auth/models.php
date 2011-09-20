@@ -17,7 +17,7 @@ class UserSession extends Model
 {
 	public function __construct() {
 		parent::__construct();
-		$this->add_field("userid", new PKField());
+		$this->add_field("user", new FKField("auth.User"));
 		$this->add_field("keycode", new CharField($max_length=40));
 		$this->add_field("expires", new DateTimeField());
 	}
@@ -54,7 +54,7 @@ class User extends Model
 	}
 	
 	private function construct_session() {
-		list($usersession, $created) = UserSession::get_or_create(array("userid"=>$this->pk));
+		list($usersession, $created) = UserSession::get_or_create(array("user"=>$this->pk));
 		if ($created) {
 			$usersession->keycode = sha1($this->pk + (microtime() * rand(0, 198)));
 			$this->update_session($usersession);
