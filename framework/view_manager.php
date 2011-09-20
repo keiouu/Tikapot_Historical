@@ -16,6 +16,8 @@ class Default404 extends View {
 	}
 }
 
+class ViewException extends Exception {}
+
 class ViewManager
 {
 	private $views;
@@ -25,6 +27,8 @@ class ViewManager
 	}
 	
 	public function add($view) {
+		if (isset($this->views[$view->get_url()]))
+			throw new ViewException("View exists!");
 		$this->views[$view->get_url()] = $view;
 	}
 	

@@ -6,8 +6,7 @@
  * Licensed under the GNU General Public License version 3.
  * See LICENSE.txt
  */
- 
-include_once(home_dir . "apps/example/models.php");
+
 require_once(home_dir . "apps/example/views.php");
 require_once(home_dir . "framework/view.php");
 
