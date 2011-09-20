@@ -14,6 +14,7 @@ require_once(home_dir . "framework/model_fields/init.php");
 class ValidationException extends Exception { }
 class TableValidationException extends ValidationException { }
 class ModelExistsException extends Exception {}
+class FieldException extends Exception {}
 
 abstract class Model
 {
@@ -74,9 +75,10 @@ abstract class Model
 		$tempobj = static::get_temp_instance();
 		$tempobj->create_table();
 		foreach ($query as $col => $val) {
-			if (!array_key_exists($col, $tempobj->fields))
-				throw new ValidationException("Model::find keys must be valid field names!");
-			$parsed_query[$col] = $tempobj->fields[$col]->sql_value($db, $val);
+			if ($col == "pk")
+				$col = $tempobj->_pk();
+			$field = $tempobj->get_field($col);
+			$parsed_query[$col] = $field->sql_value($db, $val);
 		}
 		return static::get_modelquery(array("WHERE" => $parsed_query));
 	}
@@ -93,9 +95,9 @@ abstract class Model
 	// Arg can be an id or an array with multiple parameters
 	public static function get($arg = 0) {
 		$results = NULL;
-    		if (is_array($arg))
+    		if (is_array($arg)) {
 			$results = static::find($arg);
-		else {
+		} else {
 			$tempobj = static::get_temp_instance();
 			$results = static::find(array($tempobj->_pk() => $arg));
 		}
@@ -166,7 +168,9 @@ abstract class Model
 	public function get_field($name) {
 		if ($name == "pk")
 			$name = $this->_pk();
-		return $this->fields[$name];
+		if (isset($this->fields[$name]))
+			return $this->fields[$name];
+		throw new FieldException("Field does not exist! " . $name);
 	}
 	
 	public function __get($name) {
