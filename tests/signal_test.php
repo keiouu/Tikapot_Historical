@@ -9,7 +9,6 @@
 
 require_once(home_dir . "lib/simpletest/autorun.php");
 require_once(home_dir . "framework/signal_manager.php");
-require_once(home_dir . "framework/signal.php");
 
 class TestException extends Exception{}
 
