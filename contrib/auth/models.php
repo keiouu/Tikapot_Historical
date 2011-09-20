@@ -1,6 +1,6 @@
 <?php
 /*
- * Tikapot Auth Module
+ * Tikapot Auth Models
  * 
  * This file contains models that are essential for
  * the correct operation of tikapot core modules
@@ -9,7 +9,7 @@
  * Licensed under the GNU General Public License version 3.
  * See LICENSE.txt
  */
-
+ 
 require_once(home_dir . "framework/model.php");
 require_once(home_dir . "framework/model_fields/init.php");
 
@@ -101,7 +101,6 @@ class User extends Model
 		return true;
 	}
 }
-
 
 ?>
 

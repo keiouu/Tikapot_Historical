@@ -1,0 +1,4 @@
+validation checks: No duplicate apps/models
+models take on app name: appname.model
+signals
+

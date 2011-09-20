@@ -8,7 +8,7 @@
  */
  
 require_once(home_dir . "lib/simpletest/autorun.php");
-require_once(home_dir . "contrib/auth.php");
+require_once(home_dir . "contrib/auth/init.php");
 
 
 class AuthTest extends UnitTestCase {
