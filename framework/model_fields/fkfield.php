@@ -55,9 +55,9 @@ class FKField extends ModelField
 		 */
 		list($app, $n, $class) = partition($model, '.');
 		if (!class_exists($class)) {
-			global $app_paths, $home_dir;
+			global $app_paths;
 			foreach ($app_paths as $app_path) {
-				$path = $home_dir . $app_path . '/' . $app . "/models.php";
+				$path = home_dir . $app_path . '/' . $app . "/models.php";
 				if (is_file($path)) {
 					include($path);
 					break;
