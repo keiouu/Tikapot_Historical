@@ -42,7 +42,7 @@ class CharField extends ModelField
 			$extra .= " DEFAULT '" . $this->default_value . "'";
 		if (strlen($this->_extra) > 0)
 			$extra .= ' ' . $this->_extra;
-		return $name . " " . $this::$db_type . $extra;
+		return "\"" . $name . "\" " . $this::$db_type . $extra;
 	}
 }
 

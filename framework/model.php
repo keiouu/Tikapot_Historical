@@ -316,7 +316,7 @@ abstract class Model
 				$keys .= ", ";
 				$values .= ", ";
 			}
-			$keys .= $field_name;
+			$keys .= "\"" . $field_name . "\"";
 			$val = $field->sql_value($db);
 			if (strlen($val) <= 0)
 				$val = "''";
@@ -324,7 +324,7 @@ abstract class Model
 		}
 		$extra = "";
 		if ($db->get_type() == "psql")
-			$extra = " RETURNING " . $this->_pk();
+			$extra = " RETURNING \"" . $this->_pk() . "\"";
 		return "INSERT INTO \"" . $this->get_table_name() . "\" (" . $keys . ") VALUES (" . $values . ")" . $extra . ";";
 	}
 	
@@ -382,7 +382,7 @@ abstract class Model
 	}
 
 	public function delete_query($db) {
-		return "DELETE FROM \"" . $this->get_table_name() . "\" WHERE ". $this->_pk() ."='" . $this->pk . "';";
+		return "DELETE FROM \"" . $this->get_table_name() . "\" WHERE \"". $this->_pk() ."\"='" . $this->pk . "';";
 	}
 
 	/* Returns True on success, False on failure */

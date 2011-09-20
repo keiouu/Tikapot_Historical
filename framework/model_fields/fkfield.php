@@ -33,6 +33,11 @@ class FKField extends ModelField
 		return $this;
 	}
 	
+	public function __toString()
+	{
+		return $this->value;
+	}
+	
 	public function get_db_type() {
 		$db_type = static::$db_type;
 		if ($this->_class)

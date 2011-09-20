@@ -56,7 +56,7 @@ class IntField extends ModelField
 		}
 		if (strlen($this->_extra) > 0)
 			$extra .= ' ' . $this->_extra;
-		return $name . " " . $this::$db_type . $extra;
+		return "\"" . $name . "\" " . $this::$db_type . $extra;
 	}
 	
 	public function db_extra_create_query_pre($db, $name, $table_name) {

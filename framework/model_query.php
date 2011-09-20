@@ -17,7 +17,7 @@ class ModelQuery implements Iterator, Countable
 	
 	/* $query should conform to the following structure (each line optional):
 	 *  (
-	 *    WHERE => (COL => Val, COL => (Val, OPER), etc),   Default: =
+	 *    WHERE => (COL => Val, COL => (Val, OPER), etc),   Default OPER: =
 	 *    ORDER_BY => (COL, (COL, DESC/ASC), etc),          Default: ASC
 	 *    ONLY => (COL, COL, etc),
 	 *  )
@@ -63,7 +63,7 @@ class ModelQuery implements Iterator, Countable
 				if ($clause === "WHERE") {
 					if ($count > 0)
 						$query .= " AND "; # TODO - implement OR etc
-					$query .= $name;
+					$query .= "\"" . $name . "\"";
 					if (is_array($val))
 						$query .= $val[0] . $val[1];
 					else
