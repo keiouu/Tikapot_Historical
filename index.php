@@ -7,8 +7,6 @@
  * See LICENSE.txt
  */
 
-$time = microtime(True);
-
 ini_set('display_errors', '1');
 
 define("home_dir", dirname(__FILE__) . '/');

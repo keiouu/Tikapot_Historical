@@ -13,21 +13,28 @@
  * See LICENSE.txt
  */
 
+$time = microtime(True);
+
 require_once(home_dir . "framework/signal_manager.php");
-require_once(home_dir . "framework/view_manager.php");
-require_once(home_dir . "framework/app_loader.php");
-require_once(home_dir . "framework/request.php");
-require_once(home_dir . "contrib/timer/timer.php");
-
 $signal_manager = new SignalManager();
-$signal_manager->register("");
+$signal_manager->register("page_load_start");
+$signal_manager->register("page_load_end");
 
+require_once(home_dir . "framework/view_manager.php");
 $view_manager = new ViewManager();
+
+require_once(home_dir . "framework/app_loader.php");
 load_applications();
+
+require_once(home_dir . "contrib/timer/timer.php");
+require_once(home_dir . "framework/request.php");
 $request = new Request(Timer::startAt($time));
+
+$signal_manager->fire("page_load_start", $request);
 
 header('Content-type: ' . $request->mimeType);
 
 $view_manager->get($request->page)->render($request);
 
+$signal_manager->fire("page_load_end", $request);
 ?>
