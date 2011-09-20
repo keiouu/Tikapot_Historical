@@ -19,7 +19,7 @@ require_once($home_dir . "config.php");
 require_once($home_dir . "framework/view_manager.php");
 require_once($home_dir . "framework/app_loader.php");
 require_once($home_dir . "framework/request.php");
-require_once($home_dir . "contrib/timer/init.php");
+require_once($home_dir . "contrib/timer/timer.php");
 
 $view_manager = new ViewManager();
 load_applications();

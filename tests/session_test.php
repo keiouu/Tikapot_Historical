@@ -9,6 +9,7 @@
  
 require_once(home_dir . "lib/simpletest/autorun.php");
 require_once(home_dir . "contrib/session/init.php");
+require_once(home_dir . "contrib/session/session.php");
 
 
 class SessionTest extends UnitTestCase {
