@@ -21,6 +21,14 @@ class UserSession extends Model
 		$this->add_field("keycode", new CharField($max_length=40));
 		$this->add_field("expires", new DateTimeField());
 	}
+	
+	public static function login_session($userid, $keycode) {
+		$arr = User::find(array("pk"=>$userid));
+		if (count($arr) <= 0)
+			return false;
+		$user = $arr->get(0);
+		return User::auth_encoded($user->username, $user->password);
+	}
 }
 
 class AuthException extends Exception {}
@@ -34,9 +42,6 @@ class User extends Model
 		$this->add_field("email", new CharField($max_length=50));
 		$this->add_field("created", new DateTimeField($auto_now_add = True));
 		$this->add_field("last_login", new DateTimeField($auto_now_add = True, $auto_now = True));
-		
-		if(!session_id())
-			session_start();
 	}
 	
 	private function logout($session) {
@@ -70,8 +75,7 @@ class User extends Model
 	
 	private static function encode($password) { return sha1($password); }
 	
-	public static function auth($username, $password) {
-		$password = User::encode($password);
+	public static function auth_encoded($username, $password) {
 		$arr = User::find(array("username"=>$username, "password"=>$password));
 		if (count($arr) <= 0)
 			return false;
@@ -79,6 +83,10 @@ class User extends Model
 		$user->construct_session();
 		$user->save(); // Update last_login
 		return true;
+	}
+	
+	public static function auth($username, $password) {
+		return User::auth_encoded($username, User::encode($password));
 	}
 	
 	/* Shortcut */

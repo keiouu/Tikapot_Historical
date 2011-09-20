@@ -18,6 +18,7 @@ $time = microtime(True);
 /* Start up the signal manager, register some signals */
 require_once(home_dir . "framework/signal_manager.php");
 $signal_manager = new SignalManager();
+$signal_manager->register("page_setup");
 $signal_manager->register("page_load_start");
 $signal_manager->register("page_load_end");
 
@@ -34,14 +35,12 @@ require_once(home_dir . "contrib/timer/timer.php");
 require_once(home_dir . "framework/request.php");
 $request = new Request(Timer::startAt($time));
 
-/* Fire page start event */
-$signal_manager->fire("page_load_start", $request);
-
+/* Setup the page */
+$signal_manager->fire("page_setup", $request);
 header('Content-type: ' . $request->mimeType);
 
 /* Render the page */
+$signal_manager->fire("page_load_start", $request);
 $view_manager->get($request->page)->render($request);
-
-/* Fire page end event */
 $signal_manager->fire("page_load_end", $request);
 ?>
