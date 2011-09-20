@@ -5,7 +5,8 @@
  
   <title><?php print $title; ?></title> 
   <meta name="description" content="Tikapot"> 
-  <meta name="author" content="Tikapot"> 
+  <meta name="author" content="Tikapot">
+  <?php if(isset($extra_head)) print $extra_head; ?> 
 </head> 
  
 <body>

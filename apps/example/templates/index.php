@@ -8,6 +8,12 @@
  */
 
 $title = "Home Page | Tikapot";
+$extra_head = "
+<style type=\"text/css\">
+	* {color: #444;}
+	a:hover {color: #000;}
+</style>";
+
 include("header.php");
 ?>
 

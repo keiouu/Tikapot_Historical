@@ -17,6 +17,8 @@ include("header.php");
 
 <?php
 include(home_dir . "tests/init.php");
+if ($request->get_page_load_time() !== False)
+	print "<p>Page loaded in: " . $request->get_page_load_time() . " seconds</p>";
 include("footer.php");
 ?>
 
