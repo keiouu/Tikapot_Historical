@@ -34,7 +34,7 @@ class Session
 	}
 	
 	/* removes var from the session. Returns old value (or NULL if it didnt exist) */
-	static function remove($var) {
+	static function delete($var) {
 		if (isset($_SESSION[$var])) {
 			$ret = $_SESSION[$var];
 			unset($_SESSION[$var]);

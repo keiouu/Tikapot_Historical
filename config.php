@@ -14,7 +14,7 @@ $database_username = "tikapot";
 $database_password = "tikapot";
 
 $app_paths = array("apps", "contrib", "tests");
-$apps_list = array("example");
+$apps_list = array("session", "auth", "example");
 
 date_default_timezone_set("Europe/London");
 

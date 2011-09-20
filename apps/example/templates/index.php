@@ -8,15 +8,9 @@
  */
 
 $title = "Home Page | Tikapot";
-$extra_head = "
-<style type=\"text/css\">
-	* {color: #444;}
-	a:hover {color: #000;}
-</style>";
 
 include("header.php");
 ?>
-
 <h1>Welcome to Tikapot!</h1>
 <ul>
 <li><a href="/test/">Run Tests</a></li>

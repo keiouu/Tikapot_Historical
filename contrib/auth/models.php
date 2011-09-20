@@ -12,6 +12,7 @@
  
 require_once(home_dir . "framework/model.php");
 require_once(home_dir . "framework/model_fields/init.php");
+require_once(home_dir . "contrib/session/session.php");
 
 class UserSession extends Model
 {
@@ -44,8 +45,13 @@ class User extends Model
 		$this->add_field("last_login", new DateTimeField($auto_now_add = True, $auto_now = True));
 	}
 	
-	private function logout($session) {
+	public function logged_in() {
+		return isset($_SESSION['user']) && ($_SESSION['user']['userid'] == $this->pk);
+	}
+	
+	private function logout($usersession) {
 		$usersession->delete();
+		Session::delete("user");
 	}
 	
 	private function update_session($usersession) {
@@ -64,10 +70,12 @@ class User extends Model
 				$this->logout($usersession);
 				return;
 			} else {
-				if ($usersession->keycode != $_SESSION['user']['keycode'])
+				if ($usersession->keycode != $_SESSION['user']['keycode']) {
+					$this->logout($usersession);
 					throw new AuthException("Error: session key does not match!");
-				else
+				} else {
 					$this->update_session($usersession);
+				}
 			}
 		}
 		$usersession->save();
@@ -85,7 +93,7 @@ class User extends Model
 		return true;
 	}
 	
-	public static function auth($username, $password) {
+	public static function login($username, $password) {
 		return User::auth_encoded($username, User::encode($password));
 	}
 	
